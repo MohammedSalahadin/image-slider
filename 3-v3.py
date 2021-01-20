@@ -4,10 +4,10 @@ Created on Sat Jan 16 11:50:29 2021
 
 @author: Mohammed S. Hazim
 """
-import tkinter 
+import tkinter
 from tkinter import *
 from PIL import Image, ImageTk
-from tkinter.ttk import Button
+from tkinter.ttk import *
 import os
 import time
 from win32api import GetSystemMetrics
@@ -49,7 +49,7 @@ def get_img_fit_size(path, scr_w, scr_h, rotate):
             #using transpose function instead of rotate to avoid cropping sides
             img2 = img1.transpose(Image.ROTATE_270)
             #Exchanging hieght with width value positions to make it work correctly
-            img3 = img2.resize((var,(int(scr_h))), Image.ANTIALIAS)
+            img3 = img2.resize((var,int(scr_h)), Image.ANTIALIAS)
             #Save the result to img
             img = ImageTk.PhotoImage(img3)
         else:
@@ -92,7 +92,7 @@ def get_img_fit_size(path, scr_w, scr_h, rotate):
     elif img_w == img_h and img_w > scr_w:
         print("Case 4")
         img1 = Image.open(path)
-        img2 = img1.resize((scr_w-out, scr_h-out), Image.ANTIALIAS)
+        img2 = img1.resize((scr_w, scr_h), Image.ANTIALIAS)
         
         #checking rotation if requested or not
         if rotate == False:
@@ -127,10 +127,11 @@ scr_w = GetSystemMetrics(0)
 scr_h = GetSystemMetrics(1)
 
 #Creating tk window
-window = Tk(screenName="name")
+window = Tk(className="Ragazinana")
 #making the tk window size equal to the screen size
 window.geometry(str(scr_w)+"x"+str(scr_h)+"+0+0")
-
+#changing window background color to black
+window.configure(bg="black")
 
     #function to make full screen
 def fullScreen(event):
@@ -153,6 +154,9 @@ button = Button(window, text = 'Full Screen', command = fullScreen)
 numOfImages=0 
    
 def Single_view():
+    global timeSleep
+    timeSleep = int(timeSleep.get())
+    
     #directory = filedialog.askdirectory()
     directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Portrait"
     #Get paths
@@ -193,11 +197,16 @@ def Single_view():
         
         my_message = canvas.create_text(scr_w/2,scr_h/1.15,fill="#fff",font="family",text=description,anchor="center")
         window.update()
-        time.sleep(2)
+        time.sleep(timeSleep)
     
     window.mainloop()
     
 def Multi_view():
+    
+    global timeSleep
+    timeSleep = int(timeSleep.get())
+    
+    #Getting Directory from user input
     #directory = filedialog.askdirectory()
     directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Portrait"
     #Get paths
@@ -213,7 +222,7 @@ def Multi_view():
         path2 = paths[numOfImages]
         numOfImages=numOfImages+1
         #Reset the while loop
-        if(numOfImages>len(paths)):# if total is 5 pic, 1st loop 0 > 6 /reset the loop
+        if(numOfImages >= len(paths)):# if total is 5 pic, 1st loop 0 > 6 /reset the loop
             numOfImages=0
             
             
@@ -232,14 +241,17 @@ def Multi_view():
         my_image_2 = canvas2.create_image(int(scr_w/4),int(scr_h/2),anchor=CENTER, image=img2)
         
         window.update()
-        time.sleep(2)
+        time.sleep(timeSleep)
         
     window.mainloop()
     
     
 def Multi_view_rotate():
+    global timeSleep
+    timeSleep = int(timeSleep.get())
+    #geting director from user input
     #directory = filedialog.askdirectory()
-    directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Landschaft"
+    directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Portrait"
     #Get paths
     paths = get_image_paths(directory)
     #read the image 
@@ -253,8 +265,11 @@ def Multi_view_rotate():
         numOfImages=numOfImages+1
         path2 = paths[numOfImages]
         numOfImages=numOfImages+1
-        if(numOfImages>len(paths)):# if total is 5 pic, 1st loop 0 > 6 /reset the loop
-            numOfImages=0 
+        #if the next photo is out of bound then assign it to the first index
+        if(numOfImages >= len(paths)):# if total is 5 pic, 1st loop 0 > 6 /reset the loop   
+            numOfImages=0
+    
+            
             
         # each image will take 45% of the screen width
         per_w_imgs = cal_per_num(90, scr_w)/2
@@ -262,9 +277,9 @@ def Multi_view_rotate():
         #Footer will take 10% of the screen width
         per_w_footer = cal_per_num(10, scr_w)
         
-        canvas = Canvas(window,width=per_w_imgs, height=scr_h, bg='black')
-        canvas2 = Canvas(window,width=per_w_imgs, height=scr_h, bg='black')
-        canvas3 = Canvas(window,width=per_w_footer, height=scr_h, bg='black')
+        canvas = Canvas(window,width=per_w_imgs, height=scr_h, bg='black', highlightthickness=0, highlightbackground="black")
+        canvas2 = Canvas(window,width=per_w_imgs, height=scr_h, bg='black', highlightthickness=0, highlightbackground="black")
+        canvas3 = Canvas(window,width=per_w_footer, height=scr_h, bg='black', highlightthickness=1, highlightbackground="white")
         #gird plays the canvas without it the canvas will not work
         canvas3.grid(row=0,column=0)
         canvas.grid(row=0, column = 1)
@@ -272,31 +287,37 @@ def Multi_view_rotate():
         
         
         
-        print("Dam",per_w_imgs)
-        
         #in order to make the picture fit in the rotated state in the half of the screen
         # we make the get_img_fit_size adjust it to us to that size by providing 
         # screen hight  as a width and half of the screen with as a height
         img = get_img_fit_size(path, scr_h, per_w_imgs, True)
         img2 = get_img_fit_size(path2, scr_h, per_w_imgs, True)
-        #footerImg = get_img_fit_size(footerPath, scr_h, per_w_footer, True)
-        #footerImg1 = Image.open(footerPath)
-        #footerImg2 = footerImg1.transpose(Image.ROTATE_270)
-        #footerImg3 = footerImg2.resize((int(scr_h), int(per_w_footer)), Image.ANTIALIAS)
         
+        #footerImg = get_img_fit_size(footerPath, scr_h, per_w_footer, True)
+        footerImg1 = Image.open(footerPath)
+        footerImg2 = footerImg1.transpose(Image.ROTATE_270)
+        footerImg3 = footerImg2.resize((int(per_w_footer),int(scr_h)), Image.ANTIALIAS)
+        footerImg = ImageTk.PhotoImage(footerImg3)
         
         
         my_image = canvas.create_image(int(scr_w/4.5),int(scr_h/2),anchor=CENTER, image=img)
         my_image_2 = canvas2.create_image(int(scr_w/4.5),int(scr_h/2),anchor=CENTER, image=img2)
-        #footer = canvas3.create_image(int(scr_w/4),int(scr_h/2),anchor=CENTER, image=footerImg3)
+        
+        footer = canvas3.create_image(per_w_footer/2,scr_h/2,anchor=CENTER, image=footerImg)
         
         window.update()
-        time.sleep(2)
+        time.sleep(timeSleep)
         
     window.mainloop()
-            
+    
+    
+    
 
+L1 = Label(window, text="time (Seconds)")
+L1.grid(row=0, column=0)
 
+timeSleep = tkinter.Entry(window)
+timeSleep.grid(row=0, column=1)
 
 button=Button(window,text="Single View",width=30,command=Single_view)
 button.place(relx=0.2, rely=0.5, anchor=CENTER)
@@ -304,7 +325,12 @@ button2=Button(window,text="Multi Horezantal View",width=30,command=Multi_view)
 button2.place(relx=0.5, rely=0.5, anchor=CENTER)
 button2=Button(window,text="Multi Rotated View",width=30,command=Multi_view_rotate)
 button2.place(relx=0.7, rely=0.5, anchor=CENTER)
+
+#Full Screen keys
+window.bind('<Escape>', fullScreen)
+window.bind('<KP_Enter>', fullScreen)
 window.bind('<Double 1>', fullScreen)
+
 
 window.mainloop()
 
