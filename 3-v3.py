@@ -10,7 +10,6 @@ from PIL import Image, ImageTk
 from tkinter.ttk import Button
 import os
 import time
-import cv2
 from win32api import GetSystemMetrics
 
 #getting list of pictures in directory
@@ -25,11 +24,11 @@ def get_image_paths(input_dir='.'):
 
 def get_img_fit_size(path, scr_w, scr_h):
     print("Path:", path)
-    image = cv2.imread(path)
+    imgsize = ImageTk.PhotoImage(Image.open(path))
     
     # Getting 
-    img_w = image.shape[1]
-    img_h = image.shape[0]
+    img_w = imgsize.width()
+    img_h = imgsize.height()
     
     # when the width of the photo is more than it's height and more than screen width
     if img_w > img_h and img_w > scr_w and img_h > scr_h:
@@ -91,22 +90,23 @@ button = Button(window, text = 'Full Screen', command = fullScreen)
 numOfImages=0 
    
 def submit2():
-    
+    directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Landschaft"
     #Get paths
-    paths = get_image_paths()
+    paths = get_image_paths(directory)
     #read the image 
     #call the function to get the picture object with new size
     global numOfImages
     
     path = paths[numOfImages]
     
-    while(numOfImages<=len(paths)-1):#
+    while(numOfImages<=len(paths)-1):#if total is 5 pictures then 1st loop 0 <= 6-1 ==> 0 <= 5 ,2nd loop 1 <= 5
         
         path = paths[numOfImages]
         numOfImages=numOfImages+1
         
-        if(numOfImages>len(paths)):
+        if(numOfImages>len(paths)):# if total is 5 pic, 1st loop 0 > 6 /reset the loop
             numOfImages=0 
+        
         
         #createing canvas and make it equal to the screen width and hight
         canvas = Canvas(window,width=scr_w, height=scr_h, bg='black')
