@@ -2,7 +2,7 @@
 """
 Created on Sat Jan 16 11:50:29 2021
 
-@author: DotNet
+@author: Mohammed S. Hazim
 """
 import tkinter 
 from tkinter import *
@@ -25,9 +25,9 @@ def get_image_paths(input_dir='.'):
 def get_img_fit_size(path, scr_w, scr_h, rotate):
     
     print("Path:", path)
+    
     imgsize = ImageTk.PhotoImage(Image.open(path))
-    angle = -90
-    angle %= 360
+
     # Getting 
     img_w = imgsize.width()
     img_h = imgsize.height()
@@ -39,13 +39,19 @@ def get_img_fit_size(path, scr_w, scr_h, rotate):
         print("Case 1",img_w, img_h, scr_w, scr_h)
         var = int(img_h*(scr_w/img_w))
         img1 = Image.open(path)
-        img2 = img1.resize(((int(scr_w), var)), Image.ANTIALIAS)
+        
         
         #checking rotation if requested or not
         if rotate == False:
+            img2 = img1.resize(((int(scr_w), var)), Image.ANTIALIAS)
             img = ImageTk.PhotoImage(img2)
         elif rotate == True:
-            img = ImageTk.PhotoImage(img2.rotate(angle))
+            #using transpose function instead of rotate to avoid cropping sides
+            img2 = img1.transpose(Image.ROTATE_270)
+            #Exchanging hieght with width value positions to make it work correctly
+            img3 = img2.resize((var,(int(scr_h))), Image.ANTIALIAS)
+            #Save the result to img
+            img = ImageTk.PhotoImage(img3)
         else:
             print("Missing rotate attribute")
 
@@ -55,13 +61,18 @@ def get_img_fit_size(path, scr_w, scr_h, rotate):
         print("Case 2")
         var = int(img_w*(scr_h/img_h))
         img1 = Image.open(path)
-        img2 = img1.resize((var, int(scr_h)), Image.ANTIALIAS)
         
-        #checking rotation if requested or not
+        
+        #checking rotation if requested or not, if rotation is enabled then roate picture befor resizing
         if rotate == False:
+            img2 = img1.resize((var, int(scr_h)), Image.ANTIALIAS)
             img = ImageTk.PhotoImage(img2)
         elif rotate == True:
-            img = ImageTk.PhotoImage(img2.rotate(angle))
+            #using transpose function instead of rotate to avoid cropping sides
+            img2 = img1.transpose(Image.ROTATE_270)
+            #Exchanging hieght with width value positions to make it work correctly
+            img3 = img2.resize((int(scr_h),var ), Image.ANTIALIAS)
+            img = ImageTk.PhotoImage(img3)
         else:
             print("Missing rotate attribute")
         
@@ -105,7 +116,11 @@ def get_img_fit_size(path, scr_w, scr_h, rotate):
             
     return img
 
-
+#function inputs percentage and number and outputs how much is that percentage in the number
+def cal_per_num(percentage, number):
+    quotient = percentage / 100
+    percentage = quotient * number
+    return percentage
 
 #getting the screen width and hieight
 scr_w = GetSystemMetrics(0)
@@ -224,37 +239,56 @@ def Multi_view():
     
 def Multi_view_rotate():
     #directory = filedialog.askdirectory()
-    directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Portrait"
+    directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Landschaft"
     #Get paths
     paths = get_image_paths(directory)
     #read the image 
     #call the function to get the picture object with new size
     global numOfImages
-    
+    #footer path
+    footerPath = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\ragaziana_s.jpg"
    
-    while(numOfImages<=len(paths)-1):
+    while(numOfImages<=len(paths)-1 ):
         path = paths[numOfImages]
         numOfImages=numOfImages+1
         path2 = paths[numOfImages]
         numOfImages=numOfImages+1
         if(numOfImages>len(paths)):# if total is 5 pic, 1st loop 0 > 6 /reset the loop
             numOfImages=0 
-    
-        canvas = Canvas(window,width=scr_w/2, height=scr_h, bg='black')
-        canvas2 = Canvas(window,width=scr_w/2, height=scr_h, bg='black')
+            
+        # each image will take 45% of the screen width
+        per_w_imgs = cal_per_num(90, scr_w)/2
+        
+        #Footer will take 10% of the screen width
+        per_w_footer = cal_per_num(10, scr_w)
+        
+        canvas = Canvas(window,width=per_w_imgs, height=scr_h, bg='black')
+        canvas2 = Canvas(window,width=per_w_imgs, height=scr_h, bg='black')
+        canvas3 = Canvas(window,width=per_w_footer, height=scr_h, bg='black')
         #gird plays the canvas without it the canvas will not work
-        canvas.grid(row=0,column=0)
-        canvas2.grid(row=0, column = 1)
+        canvas3.grid(row=0,column=0)
+        canvas.grid(row=0, column = 1)
+        canvas2.grid(row=0, column = 2)
+        
+        
+        
+        print("Dam",per_w_imgs)
+        
         #in order to make the picture fit in the rotated state in the half of the screen
         # we make the get_img_fit_size adjust it to us to that size by providing 
         # screen hight  as a width and half of the screen with as a height
-        img = get_img_fit_size(path, scr_h, scr_w/1.8, True)
-        img2 = get_img_fit_size(path2, scr_h, scr_w/1.8, True)
+        img = get_img_fit_size(path, scr_h, per_w_imgs, True)
+        img2 = get_img_fit_size(path2, scr_h, per_w_imgs, True)
+        #footerImg = get_img_fit_size(footerPath, scr_h, per_w_footer, True)
+        #footerImg1 = Image.open(footerPath)
+        #footerImg2 = footerImg1.transpose(Image.ROTATE_270)
+        #footerImg3 = footerImg2.resize((int(scr_h), int(per_w_footer)), Image.ANTIALIAS)
         
         
-        my_image = canvas.create_image(int(scr_w/4),int(scr_h/2),anchor=CENTER, image=img)
         
-        my_image_2 = canvas2.create_image(int(scr_w/4),int(scr_h/2),anchor=CENTER, image=img2)
+        my_image = canvas.create_image(int(scr_w/4.5),int(scr_h/2),anchor=CENTER, image=img)
+        my_image_2 = canvas2.create_image(int(scr_w/4.5),int(scr_h/2),anchor=CENTER, image=img2)
+        #footer = canvas3.create_image(int(scr_w/4),int(scr_h/2),anchor=CENTER, image=footerImg3)
         
         window.update()
         time.sleep(2)
