@@ -24,6 +24,7 @@ def get_image_paths(input_dir='.'):
     return paths
 
 def get_img_fit_size(path, scr_w, scr_h):
+    print("Path:", path)
     image = cv2.imread(path)
     
     # Getting 
@@ -134,8 +135,8 @@ def submit2():
 
 
 
-button_submit2=Button(window,text="Submit-2",width=10,command=submit2)
-button_submit2.grid(row=0,column=3)
+button=Button(window,text="Start The program",width=30,command=submit2)
+button.place(relx=0.5, rely=0.5, anchor=CENTER)
 
    
 window.bind('<Double 1>', fullScreen)
