@@ -49,7 +49,7 @@ def get_img_fit_size(path, scr_w, scr_h, rotate):
             #using transpose function instead of rotate to avoid cropping sides
             img2 = img1.transpose(Image.ROTATE_270)
             #Exchanging hieght with width value positions to make it work correctly
-            img3 = img2.resize((var,(int(scr_h))), Image.ANTIALIAS)
+            img3 = img2.resize((var,int(scr_h)), Image.ANTIALIAS)
             #Save the result to img
             img = ImageTk.PhotoImage(img3)
         else:
@@ -92,7 +92,7 @@ def get_img_fit_size(path, scr_w, scr_h, rotate):
     elif img_w == img_h and img_w > scr_w:
         print("Case 4")
         img1 = Image.open(path)
-        img2 = img1.resize((scr_w-out, scr_h-out), Image.ANTIALIAS)
+        img2 = img1.resize((scr_w, scr_h), Image.ANTIALIAS)
         
         #checking rotation if requested or not
         if rotate == False:
@@ -127,10 +127,11 @@ scr_w = GetSystemMetrics(0)
 scr_h = GetSystemMetrics(1)
 
 #Creating tk window
-window = Tk(screenName="name")
+window = Tk(className="Ragazinana")
 #making the tk window size equal to the screen size
 window.geometry(str(scr_w)+"x"+str(scr_h)+"+0+0")
-
+#changing window background color to black
+window.configure(bg="black")
 
     #function to make full screen
 def fullScreen(event):
@@ -153,8 +154,8 @@ button = Button(window, text = 'Full Screen', command = fullScreen)
 numOfImages=0 
    
 def Single_view():
-    #directory = filedialog.askdirectory()
-    directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Portrait"
+    directory = filedialog.askdirectory()
+    #directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Portrait"
     #Get paths
     paths = get_image_paths(directory)
     #read the image 
@@ -198,8 +199,9 @@ def Single_view():
     window.mainloop()
     
 def Multi_view():
-    #directory = filedialog.askdirectory()
-    directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Portrait"
+    #Getting Directory from user input
+    directory = filedialog.askdirectory()
+    #directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Portrait"
     #Get paths
     paths = get_image_paths(directory)
     #read the image 
@@ -213,7 +215,7 @@ def Multi_view():
         path2 = paths[numOfImages]
         numOfImages=numOfImages+1
         #Reset the while loop
-        if(numOfImages>len(paths)):# if total is 5 pic, 1st loop 0 > 6 /reset the loop
+        if(numOfImages>=len(paths)):# if total is 5 pic, 1st loop 0 > 6 /reset the loop
             numOfImages=0
             
             
@@ -238,8 +240,9 @@ def Multi_view():
     
     
 def Multi_view_rotate():
-    #directory = filedialog.askdirectory()
-    directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Landschaft"
+    #geting director from user input
+    directory = filedialog.askdirectory()
+    #directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Landschaft"
     #Get paths
     paths = get_image_paths(directory)
     #read the image 
@@ -253,8 +256,11 @@ def Multi_view_rotate():
         numOfImages=numOfImages+1
         path2 = paths[numOfImages]
         numOfImages=numOfImages+1
-        if(numOfImages>len(paths)):# if total is 5 pic, 1st loop 0 > 6 /reset the loop
-            numOfImages=0 
+        #if the next photo is out of bound then assign it to the first index
+        if(numOfImages>=len(paths)):# if total is 5 pic, 1st loop 0 > 6 /reset the loop   
+            numOfImages=0
+    
+            
             
         # each image will take 45% of the screen width
         per_w_imgs = cal_per_num(90, scr_w)/2
@@ -304,7 +310,12 @@ button2=Button(window,text="Multi Horezantal View",width=30,command=Multi_view)
 button2.place(relx=0.5, rely=0.5, anchor=CENTER)
 button2=Button(window,text="Multi Rotated View",width=30,command=Multi_view_rotate)
 button2.place(relx=0.7, rely=0.5, anchor=CENTER)
+
+#Full Screen keys
+window.bind('<Escape>', fullScreen)
+window.bind('<KP_Enter>', fullScreen)
 window.bind('<Double 1>', fullScreen)
+
 
 window.mainloop()
 
