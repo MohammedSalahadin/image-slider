@@ -6,6 +6,7 @@ Created on Sat Jan 16 11:50:29 2021
 """
 import tkinter
 from tkinter import *
+from tkinter import filedialog as filedialog
 from PIL import Image, ImageTk
 from tkinter.ttk import *
 import os
@@ -131,7 +132,12 @@ window = Tk(className="Ragazinana")
 #making the tk window size equal to the screen size
 window.geometry(str(scr_w)+"x"+str(scr_h)+"+0+0")
 #changing window background color to black
-window.configure(bg="black")
+#window.configure(bg="black")
+
+
+window2 = Tk(className="Ragazinana Slideshow")
+#making the tk window size equal to the screen size
+window2.geometry(str(scr_w)+"x"+str(scr_h)+"+0+0")
 
     #function to make full screen
 def fullScreen(event):
@@ -151,14 +157,16 @@ button = Button(window, text = 'Full Screen', command = fullScreen)
 #button.pack(side = "bottom", pady = 2)
 
 #Our global variable, increase it in the global scope, not only inside the functions
-numOfImages=0 
+numOfImages = 0
+numOfImagesPort=0 
+numOfImagesLand=0
    
 def Single_view():
     global timeSleep
     timeSleep = int(timeSleep.get())
     
-    #directory = filedialog.askdirectory()
-    directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Portrait"
+    directory = filedialog.askdirectory()
+    #directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Portrait"
     #Get paths
     paths = get_image_paths(directory)
     #read the image 
@@ -202,13 +210,13 @@ def Single_view():
     window.mainloop()
     
 def Multi_view():
-    
+
     global timeSleep
     timeSleep = int(timeSleep.get())
     
     #Getting Directory from user input
-    #directory = filedialog.askdirectory()
-    directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Portrait"
+    directory = filedialog.askdirectory()
+    #directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Portrait"
     #Get paths
     paths = get_image_paths(directory)
     #read the image 
@@ -219,12 +227,13 @@ def Multi_view():
     while(numOfImages<=len(paths)-1):
         path = paths[numOfImages]
         numOfImages=numOfImages+1
-        path2 = paths[numOfImages]
-        numOfImages=numOfImages+1
+        
         #Reset the while loop
         if(numOfImages >= len(paths)):# if total is 5 pic, 1st loop 0 > 6 /reset the loop
             numOfImages=0
-            
+            continue 
+        path2 = paths[numOfImages]
+        numOfImages=numOfImages+1
             
             
         
@@ -247,51 +256,76 @@ def Multi_view():
     
     
 def Multi_view_rotate():
+    
+    z_out = 20
+    
     global timeSleep
-    timeSleep = int(timeSleep.get())
-    #geting director from user input
-    #directory = filedialog.askdirectory()
-    directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Portrait"
+    timeSleepVal = int(timeSleep.get())
+    global footerPath
+    footerPath = footerPath.get()
+    #geting director from entry boxes
+    global portDirEntry
+    portDirEntry = portDirEntry.get()
+    global landDirEntry
+    landDirEntry = landDirEntry.get()
+    
+    
+    
+    #directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Landschaft"
     #Get paths
-    paths = get_image_paths(directory)
+    pathsPrt = get_image_paths(portDirEntry)
+    pathsLand = get_image_paths(landDirEntry)
     #read the image 
     #call the function to get the picture object with new size
-    global numOfImages
+    global numOfImagesPort
+    global numOfImagesLand
     #footer path
-    footerPath = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\ragaziana_s.jpg"
-   
-    while(numOfImages<=len(paths)-1 ):
-        path = paths[numOfImages]
-        numOfImages=numOfImages+1
-        path2 = paths[numOfImages]
-        numOfImages=numOfImages+1
-        #if the next photo is out of bound then assign it to the first index
-        if(numOfImages >= len(paths)):# if total is 5 pic, 1st loop 0 > 6 /reset the loop   
-            numOfImages=0
+    #footerPath = "C:/Users/DotNet/Desktop/Ragazinana Data reduced/diashow/ragaziana_s.jpg"
     
+    while(numOfImagesPort<=len(pathsPrt)-1 or numOfImagesLand<=len(pathsLand)-1 ):
+        pathPort = pathsPrt[numOfImagesPort]
+        pathLand = pathsLand[numOfImagesLand]
+        #increase the index to get the next file in the next loop
+        numOfImagesPort=numOfImagesPort+1
+        numOfImagesLand = numOfImagesLand+1
+        
+        #if the next photo is out of bound then assign it to the first index
+        if(numOfImagesPort >= len(pathsPrt)):# if total is 5 pic, 1st loop 0 > 6 /reset the loop   
+            numOfImagesPort=0
+        if(numOfImagesLand >= len(pathsLand)):
+            numOfImagesLand=0
             
             
-        # each image will take 45% of the screen width
-        per_w_imgs = cal_per_num(90, scr_w)/2
+            
+        # each image will take as following in percentage
+        per_w_imgs_landscape = cal_per_num(42, scr_w)
+        per_w_imgs_portriate = cal_per_num(50, scr_w)
+            
+        #Footer will take 8% of the screen width   
+        per_w_footer = cal_per_num(8, scr_w)
         
-        #Footer will take 10% of the screen width
-        per_w_footer = cal_per_num(10, scr_w)
-        
-        canvas = Canvas(window,width=per_w_imgs, height=scr_h, bg='black', highlightthickness=0, highlightbackground="black")
-        canvas2 = Canvas(window,width=per_w_imgs, height=scr_h, bg='black', highlightthickness=0, highlightbackground="black")
-        canvas3 = Canvas(window,width=per_w_footer, height=scr_h, bg='black', highlightthickness=1, highlightbackground="white")
+        #Create the canvases
+        canvas = Canvas(window,width=per_w_imgs_portriate, height=scr_h, bg='white', highlightthickness=10, highlightbackground="white")
+        canvas2 = Canvas(window,width=per_w_imgs_landscape, height=scr_h, bg='white', highlightthickness=10, highlightbackground="white")
+        canvas3 = Canvas(window,width=per_w_footer, height=scr_h, bg='white', highlightthickness=10, highlightbackground="white")
         #gird plays the canvas without it the canvas will not work
-        canvas3.grid(row=0,column=0)
-        canvas.grid(row=0, column = 1)
-        canvas2.grid(row=0, column = 2)
         
         
+        
+        
+        #pack(side='left')
+        canvas3.grid(row=0, column=0)
+        canvas2.grid(row=0, column=1)
+        canvas.grid(row=0, column=2)
+
         
         #in order to make the picture fit in the rotated state in the half of the screen
         # we make the get_img_fit_size adjust it to us to that size by providing 
         # screen hight  as a width and half of the screen with as a height
-        img = get_img_fit_size(path, scr_h, per_w_imgs, True)
-        img2 = get_img_fit_size(path2, scr_h, per_w_imgs, True)
+        img = get_img_fit_size(pathPort, scr_h-z_out, per_w_imgs_landscape-z_out, True)
+        img2 = get_img_fit_size(pathLand, scr_h, per_w_imgs_portriate, True)
+
+        
         
         #footerImg = get_img_fit_size(footerPath, scr_h, per_w_footer, True)
         footerImg1 = Image.open(footerPath)
@@ -300,32 +334,77 @@ def Multi_view_rotate():
         footerImg = ImageTk.PhotoImage(footerImg3)
         
         
-        my_image = canvas.create_image(int(scr_w/4.5),int(scr_h/2),anchor=CENTER, image=img)
+        my_image = canvas.create_image(int(scr_w/4.3),int(scr_h/2),anchor=CENTER, image=img)
         my_image_2 = canvas2.create_image(int(scr_w/4.5),int(scr_h/2),anchor=CENTER, image=img2)
         
         footer = canvas3.create_image(per_w_footer/2,scr_h/2,anchor=CENTER, image=footerImg)
         
         window.update()
-        time.sleep(timeSleep)
+        time.sleep(timeSleepVal)
         
     window.mainloop()
     
     
     
+#function to insert the footer file neme to the text input
+def insert():
+    file = filedialog.askopenfilename()
+    global footerPath
+    footerPath.insert(0,file)
+def insertPortDir():
+    file = filedialog.askdirectory()
+    global portDirEntry
+    portDirEntry.insert(0, file)
+def insertLandDir():
+    file = filedialog.askdirectory()
+    global landDirEntry
+    landDirEntry.insert(0, file)
+
+    
+
 
 L1 = Label(window, text="time (Seconds)")
 L1.grid(row=0, column=0)
 
+L2 = Label(window, text="Footer photo Path")
+L2.grid(row=1, column=0)
+
+L3 = Label(window, text="Portrait Folder")
+L3.grid(row=2, column=0)
+
+L3 = Label(window, text="Landscape Folder")
+L3.grid(row=3, column=0)
+
 timeSleep = tkinter.Entry(window)
 timeSleep.grid(row=0, column=1)
 
-button=Button(window,text="Single View",width=30,command=Single_view)
-button.place(relx=0.2, rely=0.5, anchor=CENTER)
-button2=Button(window,text="Multi Horezantal View",width=30,command=Multi_view)
-button2.place(relx=0.5, rely=0.5, anchor=CENTER)
-button2=Button(window,text="Multi Rotated View",width=30,command=Multi_view_rotate)
-button2.place(relx=0.7, rely=0.5, anchor=CENTER)
 
+
+footerPath = tkinter.Entry(window,width=50)
+footerPath.grid(row=1, column=1)
+
+portDirEntry = tkinter.Entry(window,width=50)
+portDirEntry.grid(row=2, column=1)
+
+landDirEntry = tkinter.Entry(window,width=50)
+landDirEntry.grid(row=3, column=1)
+
+select_btn = Button(window,text="Select file",width=30,command=insert)
+select_btn.grid(row=1, column=2)
+
+port_btn = Button(window,text="Select Folder",width=30,command=insertPortDir)
+port_btn.grid(row=2, column=2)
+
+land_btn = Button(window,text="Select Folder",width=30,command=insertLandDir)
+land_btn.grid(row=3, column=2)
+
+#button=Button(window,text="Single View",width=30,command=Single_view)
+#button.place(relx=0.2, rely=0.5, anchor=CENTER)
+#button2=Button(window,text="Multi Horezantal View",width=30,command=Multi_view)
+#button2.place(relx=0.5, rely=0.5, anchor=CENTER)
+button3=Button(window,text="Play",width=30,command=Multi_view_rotate)
+#button3.place(relx=0.7, rely=0.5, anchor=CENTER)
+button3.grid(row=4, column=1)
 #Full Screen keys
 window.bind('<Escape>', fullScreen)
 window.bind('<KP_Enter>', fullScreen)
