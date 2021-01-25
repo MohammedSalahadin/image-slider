@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 """
 Created on Sat Jan 16 11:50:29 2021
@@ -7,10 +8,9 @@ Created on Sat Jan 16 11:50:29 2021
 import tkinter
 from tkinter import *
 from tkinter import colorchooser
+from tkinter import ttk as ttk
 from tkinter import filedialog as filedialog
-
 from PIL import Image, ImageTk
-
 import os
 import time
 
@@ -208,7 +208,7 @@ def Single_view():
     global timeSleep
     timeSleep = int(timeSleep.get())
     
-    directory = filedialog.askdirectory()
+    directory = portDirEntry.get()
     #directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Portrait"
     #Get paths
     paths = get_image_paths(directory)
@@ -258,7 +258,7 @@ def Multi_view():
     timeSleep = int(timeSleep.get())
     
     #Getting Directory from user input
-    directory = filedialog.askdirectory()
+    directory = portDirEntry.get()
     #directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Portrait"
     #Get paths
     paths = get_image_paths(directory)
@@ -352,7 +352,7 @@ def Multi_view_rotate():
         #Create the canvases
         canvasPort = Canvas(window,width=per_w_imgs_portriate, height=scr_h, bg=bgcolor, highlightthickness=10, highlightbackground=bgcolor)
         canvasLand = Canvas(window,width=per_w_imgs_landscape, height=scr_h, bg=bgcolor, highlightthickness=10, highlightbackground=bgcolor)
-        canvasFoot = Canvas(window,width=per_w_footer, height=scr_h, bg=bgcolor, highlightthickness=10, highlightbackground=bgcolor)
+        canvasFoot = Canvas(window,width=per_w_footer, height=scr_h, bg=bgcolor, highlightthickness=0, highlightbackground=bgcolor)
         #gird plays the canvas without it the canvas will not work
         
         
@@ -418,12 +418,28 @@ def checkPlay():
     global colorEntry
     global footerPath
     global portDirEntry
+    global error
+    
+    print ("resurt", Radio_Value0.get ())
     #print(timeSleep.get(), colorEntry.get(),footerPath.get(),portDirEntry.get())
     if timeSleep.get() != "" and colorEntry.get() != "" and footerPath.get() != "" and portDirEntry.get() != "":
-        Multi_view_rotate()
+        if Radio_Value0.get () == 0:
+            Single_view()
+        elif Radio_Value0.get () == 1:
+            Multi_view()
+        elif Radio_Value0.get () == 2:
+            Multi_view_rotate()
+        else:
+            error.configure(text="Something went wrong while detectig the view mode type")
+            error.grid(row=7, column=1)
     else:
-        pass
+        error.configure(text="Please make sure to choice all optins")
+        error.grid(row=7, column=1)
         
+        
+
+
+error = Label(window, text="Error",fg="red")
 
 
 
@@ -443,8 +459,7 @@ timeSleep = tkinter.Entry(window)
 timeSleep.insert(0, "2")
 timeSleep.grid(row=0, column=1)
 
-colorButton = Button(window, text = "Select color",command = choose_color, width=30)
-colorButton.grid(row=4, column=2)
+
 
 footerPath = tkinter.Entry(window,width=50)
 footerPath.insert(0, "C:/Users/DotNet/Desktop/Ragazinana Data reduced/diashow/ragaziana_s.jpg")
@@ -458,33 +473,39 @@ portDirEntry.grid(row=2, column=1)
 colorEntry = tkinter.Entry(window, width=50)
 colorEntry.grid(row=4, column=1)
 
-select_btn = Button(window,text="Select file",width=30,command=insert)
-select_btn.grid(row=1, column=2)
+select_btn = Button(window,text="Select file",width=10,command=insert)
+select_btn.grid(row=1, column=2,pady=5, padx=20)
 
-port_btn = Button(window,text="Select Folder",width=30,command=insertPortDir)
-port_btn.grid(row=2, column=2)
+port_btn = Button(window,text="Select Folder",width=10,command=insertPortDir)
+port_btn.grid(row=2, column=2,pady=5, padx=20)
+
+colorButton = Button(window, text = "Select color",command = choose_color, width=10)
+colorButton.grid(row=4, column=2,pady=5, padx=20)
+
 
 
 radioGroup = LabelFrame(window, text = "Select view type")
 radioGroup.grid(row=5, column=1)
+
+
+#Varibale to use in choices
+Radio_Value0 = tkinter.IntVar ()
+Radio_Value0.set(0)
 #Select view mode
-choice1 = ttk.Radiobutton(radioGroup, text="Single View", value=1)
-choice1.configure(state = DISABLED)
+choice1 = ttk.Radiobutton(radioGroup, text="Single View", variable = Radio_Value0, value = 0)
+#choice1.configure(state = DISABLED)
 choice1.grid(row=5, column=0)
-choice2 = ttk.Radiobutton(radioGroup, text="Multi View", value=2)
-choice2.configure(state = DISABLED)
+choice2 = ttk.Radiobutton(radioGroup, text="Multi View", variable = Radio_Value0, value = 1)
+#choice2.configure(state = DISABLED)
 choice2.grid(row=5, column=1)
-choice3 = ttk.Radiobutton(radioGroup, text="Multi Rotated View", value=3)
+choice3 = ttk.Radiobutton(radioGroup, text="Multi Rotated View", variable = Radio_Value0, value = 2)
 choice3.grid(row=5, column=2)
 
 
-#button=Button(window,text="Single View",width=30,command=Single_view)
-#button.place(relx=0.2, rely=0.5, anchor=CENTER)
-#button2=Button(window,text="Multi Horezantal View",width=30,command=Multi_view)
-#button2.place(relx=0.5, rely=0.5, anchor=CENTER)
-button3=Button(window,text="Play",width=30,command=checkPlay)
+
+button3=Button(window,text="Play",width=10,command=checkPlay)
 #button3.place(relx=0.7, rely=0.5, anchor=CENTER)
-button3.grid(row=6, column=1)
+button3.grid(row=5, column=2,pady=20, padx=20)
 #Full Screen keys
 window.bind('<Escape>', fullScreen)
 window.bind('<KP_Enter>', fullScreen)
