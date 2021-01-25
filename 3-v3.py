@@ -327,6 +327,7 @@ def Multi_view_rotate():
     #footerPath = "C:/Users/DotNet/Desktop/Ragazinana Data reduced/diashow/ragaziana_s.jpg"
     
     while(numOfImagesPort<=len(pathsPrt)-1 or numOfImagesLand<=len(pathsLand)-1 ):
+        
         pathPort = pathsPrt[numOfImagesPort]
         pathLand = pathsLand[numOfImagesLand]
         #increase the index to get the next file in the next loop
@@ -342,32 +343,32 @@ def Multi_view_rotate():
             
             
         # each image will take as following in percentage
-        per_w_imgs_landscape = cal_per_num(42, scr_w)
-        per_w_imgs_portriate = cal_per_num(50, scr_w)
+        per_w_imgs_portriate = cal_per_num(42, scr_w)
+        per_w_imgs_landscape= cal_per_num(50, scr_w)
             
         #Footer will take 8% of the screen width   
         per_w_footer = cal_per_num(8, scr_w)
         
         #Create the canvases
-        canvas = Canvas(window,width=per_w_imgs_portriate, height=scr_h, bg=bgcolor, highlightthickness=10, highlightbackground=bgcolor)
-        canvas2 = Canvas(window,width=per_w_imgs_landscape, height=scr_h, bg=bgcolor, highlightthickness=10, highlightbackground=bgcolor)
-        canvas3 = Canvas(window,width=per_w_footer, height=scr_h, bg=bgcolor, highlightthickness=10, highlightbackground=bgcolor)
+        canvasPort = Canvas(window,width=per_w_imgs_portriate, height=scr_h, bg=bgcolor, highlightthickness=10, highlightbackground=bgcolor)
+        canvasLand = Canvas(window,width=per_w_imgs_landscape, height=scr_h, bg=bgcolor, highlightthickness=10, highlightbackground=bgcolor)
+        canvasFoot = Canvas(window,width=per_w_footer, height=scr_h, bg=bgcolor, highlightthickness=10, highlightbackground=bgcolor)
         #gird plays the canvas without it the canvas will not work
         
         
         
         
         #pack(side='left')
-        canvas3.grid(row=0, column=0)
-        canvas2.grid(row=0, column=1)
-        canvas.grid(row=0, column=2)
+        canvasFoot.grid(row=0, column=0)
+        canvasLand.grid(row=0, column=2)
+        canvasPort.grid(row=0, column=1)
 
         
         #in order to make the picture fit in the rotated state in the half of the screen
         # we make the get_img_fit_size adjust it to us to that size by providing 
         # screen hight  as a width and half of the screen with as a height
-        img = get_img_fit_size(pathPort, scr_h-z_out, per_w_imgs_landscape-z_out, True)
-        img2 = get_img_fit_size(pathLand, scr_h, per_w_imgs_portriate, True)
+        imgPort = get_img_fit_size(pathPort, scr_h-z_out, per_w_imgs_landscape-z_out, True)
+        imgLand = get_img_fit_size(pathLand, scr_h, per_w_imgs_portriate, True)
 
         
         
@@ -378,10 +379,10 @@ def Multi_view_rotate():
         footerImg = ImageTk.PhotoImage(footerImg3)
         
         
-        my_image = canvas.create_image(int(scr_w/4.3),int(scr_h/2),anchor=CENTER, image=img)
-        my_image_2 = canvas2.create_image(int(scr_w/4.5),int(scr_h/2),anchor=CENTER, image=img2)
+        portImgCanvas = canvasPort.create_image(int(scr_w/4.3),int(scr_h/2),anchor=CENTER, image=imgPort)
+        landImgCanvas = canvasLand.create_image(int(scr_w/4.5),int(scr_h/2),anchor=CENTER, image=imgLand)
         
-        footer = canvas3.create_image(per_w_footer/2,scr_h/2,anchor=CENTER, image=footerImg)
+        footer = canvasFoot.create_image(per_w_footer/2,scr_h/2,anchor=CENTER, image=footerImg)
         
         window.update()
         time.sleep(timeSleepVal)
