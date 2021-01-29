@@ -1,8 +1,6 @@
-
 # -*- coding: utf-8 -*-
 """
 Created on Sat Jan 16 11:50:29 2021
-
 @author: Mohammed S. Hazim
 """
 import tkinter
@@ -166,8 +164,8 @@ def cal_per_num(percentage, number):
 
 
 #Creating tk window
-window = Tk(className="Ragazinana")
-
+window = Tk(className="Ragazinana Slide Show")
+window.iconbitmap(r'C:\Users\DotNet\Desktop\slideshow\img_slider\image-slider\app.ico')
 
 #getting the screen width and hieight
 scr_w = window.winfo_screenwidth()
@@ -175,7 +173,10 @@ scr_h = window.winfo_screenheight()
 
 
 #making the tk window size equal to the screen size
-window.geometry(str(scr_w)+"x"+str(scr_h)+"+0+0")
+window.geometry("580x240")
+
+#after play
+
 #changing window background color to black
 #window.configure(bg="black")
 
@@ -205,8 +206,11 @@ numOfImagesPort=0
 numOfImagesLand=0
    
 def Single_view():
+    window.geometry(str(scr_w)+"x"+str(scr_h)+"+0+0")
     global timeSleep
     timeSleep = int(timeSleep.get())
+    global colorEntry
+    bgcolor = colorEntry.get()
     
     directory = portDirEntry.get()
     #directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Portrait"
@@ -228,7 +232,7 @@ def Single_view():
         
         
         #createing canvas and make it equal to the screen width and hight
-        canvas = Canvas(window,width=scr_w, height=scr_h, bg='black')
+        canvas = Canvas(window,width=scr_w, height=scr_h, bg=bgcolor)
         #gird plays the canvas without it the canvas will not work
         canvas.grid(row=0,column=0)
         
@@ -239,7 +243,7 @@ def Single_view():
         
         
         #Text View
-        path_arr = path.split('\\') # split the direcoties of the image path 
+        path_arr = path.split("\\") # split the direcoties of the image path 
         f_img = (path_arr[-1]) # get the last index of the array of the path
         result = f_img[:-4] # Remve last characters from the image name
         description = result
@@ -253,9 +257,11 @@ def Single_view():
     window.mainloop()
     
 def Multi_view():
-
+    window.geometry(str(scr_w)+"x"+str(scr_h)+"+0+0")
     global timeSleep
     timeSleep = int(timeSleep.get())
+    global colorEntry
+    bgcolor = colorEntry.get()
     
     #Getting Directory from user input
     directory = portDirEntry.get()
@@ -280,8 +286,8 @@ def Multi_view():
             
             
         
-        canvas = Canvas(window,width=scr_w/2, height=scr_h, bg='black')
-        canvas2 = Canvas(window,width=scr_w/2, height=scr_h, bg='black')
+        canvas = Canvas(window,width=scr_w/2, height=scr_h, bg=bgcolor)
+        canvas2 = Canvas(window,width=scr_w/2, height=scr_h, bg=bgcolor)
         #gird plays the canvas without it the canvas will not work
         canvas.grid(row=0,column=0)
         canvas2.grid(row=0, column = 1)
@@ -299,7 +305,7 @@ def Multi_view():
     
     
 def Multi_view_rotate():
-    
+    window.geometry(str(scr_w)+"x"+str(scr_h)+"+0+0")
     z_out = 20
     
     global timeSleep
@@ -352,7 +358,7 @@ def Multi_view_rotate():
         #Create the canvases
         canvasPort = Canvas(window,width=per_w_imgs_portriate, height=scr_h, bg=bgcolor, highlightthickness=10, highlightbackground=bgcolor)
         canvasLand = Canvas(window,width=per_w_imgs_landscape, height=scr_h, bg=bgcolor, highlightthickness=10, highlightbackground=bgcolor)
-        canvasFoot = Canvas(window,width=per_w_footer, height=scr_h, bg=bgcolor, highlightthickness=0, highlightbackground=bgcolor)
+        canvasFoot = Canvas(window,width=per_w_footer, height=scr_h, bg=bgcolor, highlightthickness=1, highlightbackground=bgcolor)
         #gird plays the canvas without it the canvas will not work
         
         
@@ -420,7 +426,7 @@ def checkPlay():
     global portDirEntry
     global error
     
-    print ("resurt", Radio_Value0.get ())
+    #print ("resurt", Radio_Value0.get ())
     #print(timeSleep.get(), colorEntry.get(),footerPath.get(),portDirEntry.get())
     if timeSleep.get() != "" and colorEntry.get() != "" and footerPath.get() != "" and portDirEntry.get() != "":
         if Radio_Value0.get () == 0:
@@ -433,7 +439,7 @@ def checkPlay():
             error.configure(text="Something went wrong while detectig the view mode type")
             error.grid(row=7, column=1)
     else:
-        error.configure(text="Please make sure to choice all optins")
+        error.configure(text="Please make sure to all fields are selected!")
         error.grid(row=7, column=1)
         
         
@@ -444,29 +450,29 @@ error = Label(window, text="Error",fg="red")
 
 
 L1 = Label(window, text="time (Seconds)")
-L1.grid(row=0, column=0)
+L1.grid(row=0, column=0,pady=5, padx=20)
 
 L2 = Label(window, text="Footer photo Path")
-L2.grid(row=1, column=0)
+L2.grid(row=1, column=0,pady=5, padx=20)
 
-L3 = Label(window, text="Portrait Folder")
-L3.grid(row=2, column=0)
+L3 = Label(window, text="Pictures Folder")
+L3.grid(row=2, column=0,pady=5, padx=20)
 
 L4 = Label(window, text="Background color")
-L4.grid(row=4, column=0)
+L4.grid(row=4, column=0,pady=5, padx=20)
 
 timeSleep = tkinter.Entry(window)
-timeSleep.insert(0, "2")
+#timeSleep.insert(0, "2")
 timeSleep.grid(row=0, column=1)
 
 
 
 footerPath = tkinter.Entry(window,width=50)
-footerPath.insert(0, "C:/Users/DotNet/Desktop/Ragazinana Data reduced/diashow/ragaziana_s.jpg")
+#footerPath.insert(0, "C:/Users/DotNet/Desktop/Ragazinana Data reduced/diashow/ragaziana_s.jpg")
 footerPath.grid(row=1, column=1)
 
 portDirEntry = tkinter.Entry(window,width=50)
-portDirEntry.insert(0, "C:/Users/DotNet/Desktop/Ragazinana Data reduced/diashow/4 Random/Portrait")
+#portDirEntry.insert(0, "C:/Users/DotNet/Desktop/Ragazinana Data reduced/diashow/4 Random/Portrait")
 portDirEntry.grid(row=2, column=1)
 
 
@@ -482,11 +488,8 @@ port_btn.grid(row=2, column=2,pady=5, padx=20)
 colorButton = Button(window, text = "Select color",command = choose_color, width=10)
 colorButton.grid(row=4, column=2,pady=5, padx=20)
 
-
-
 radioGroup = LabelFrame(window, text = "Select view type")
 radioGroup.grid(row=5, column=1)
-
 
 #Varibale to use in choices
 Radio_Value0 = tkinter.IntVar ()
@@ -502,8 +505,7 @@ choice3 = ttk.Radiobutton(radioGroup, text="Multi Rotated View", variable = Radi
 choice3.grid(row=5, column=2)
 
 
-
-button3=Button(window,text="Play",width=10,command=checkPlay)
+button3=Button(window,text="Play",width=10,command=checkPlay, bg='#d5eaff')
 #button3.place(relx=0.7, rely=0.5, anchor=CENTER)
 button3.grid(row=5, column=2,pady=20, padx=20)
 #Full Screen keys
@@ -511,7 +513,5 @@ window.bind('<Escape>', fullScreen)
 window.bind('<KP_Enter>', fullScreen)
 window.bind('<Double 1>', fullScreen)
 
-
 window.mainloop()
-
 
