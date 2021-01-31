@@ -10,7 +10,13 @@ from tkinter import ttk as ttk
 from tkinter import filedialog as filedialog
 from PIL import Image, ImageTk
 import os
+from os import path
 import time
+import sys
+
+
+
+
 
 
 #getting list of pictures in directory
@@ -164,7 +170,7 @@ def cal_per_num(percentage, number):
 
 
 #Creating tk window
-window = Tk(className="Ragazinana Slide Show")
+window = Tk(className="Ragaziana Slide Show")
 window.iconbitmap(r'C:\Users\DotNet\Desktop\slideshow\img_slider\image-slider\app.ico')
 
 #getting the screen width and hieight
@@ -205,14 +211,12 @@ numOfImages = 0
 numOfImagesPort=0 
 numOfImagesLand=0
    
-def Single_view():
+def Single_view(timeSleep,directory,colorEntry):
     window.geometry(str(scr_w)+"x"+str(scr_h)+"+0+0")
-    global timeSleep
-    timeSleep = int(timeSleep.get())
-    global colorEntry
-    bgcolor = colorEntry.get()
+    window.attributes('-fullscreen', True)
     
-    directory = portDirEntry.get()
+    
+    #directory = allDirEntry.get()
     #directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Portrait"
     #Get paths
     paths = get_image_paths(directory)
@@ -258,13 +262,15 @@ def Single_view():
     
 def Multi_view():
     window.geometry(str(scr_w)+"x"+str(scr_h)+"+0+0")
+    window.attributes('-fullscreen', True)
+    
     global timeSleep
     timeSleep = int(timeSleep.get())
     global colorEntry
     bgcolor = colorEntry.get()
     
     #Getting Directory from user input
-    directory = portDirEntry.get()
+    directory = allDirEntry.get()
     #directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Portrait"
     #Get paths
     paths = get_image_paths(directory)
@@ -304,27 +310,12 @@ def Multi_view():
     window.mainloop()
     
     
-def Multi_view_rotate():
+def Multi_view_rotate(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
+    #Creating tk window
+    window.attributes('-fullscreen', True)
     window.geometry(str(scr_w)+"x"+str(scr_h)+"+0+0")
-    z_out = 20
     
-    global timeSleep
-    timeSleepVal = int(timeSleep.get())
-    global footerPath
-    footerPath = footerPath.get()
-    #geting director from entry boxes
-    global portDirEntry
-    portDirEntry = portDirEntry.get()
-    
-    global colorEntry
-    bgcolor = colorEntry.get()
-    
-    allPaths = getPaths(portDirEntry)
-    
-    #directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Landschaft"
-    #Get paths
-    pathsPrt = allPaths[0]
-    pathsLand = allPaths[1]
+
     #read the image 
     #call the function to get the picture object with new size
     global numOfImagesPort
@@ -332,83 +323,150 @@ def Multi_view_rotate():
     #footer path
     #footerPath = "C:/Users/DotNet/Desktop/Ragazinana Data reduced/diashow/ragaziana_s.jpg"
     
+    #Footer will take 8% of the screen width   
+    per_w_footer = cal_per_num(8, scr_w)
+    # Footer Image operations
+    canvasFoot = Canvas(window,width=per_w_footer, height=scr_h, bg=bgcolor, highlightthickness=1, highlightbackground=bgcolor)
+    canvasFoot.grid(row=0, column=0)
+
+    
+    #footerImg = get_img_fit_size(footerPath, scr_h, per_w_footer, True)
+    footerImg1 = Image.open(footerPath)
+    footerImg2 = footerImg1.transpose(Image.ROTATE_270)
+    footerImg3 = footerImg2.resize((int(per_w_footer),int(scr_h)), Image.ANTIALIAS)
+    footerImg = ImageTk.PhotoImage(footerImg3)
+    footer = canvasFoot.create_image(per_w_footer/2,scr_h/2,anchor=CENTER, image=footerImg)
+    
+    
     while(numOfImagesPort<=len(pathsPrt)-1 or numOfImagesLand<=len(pathsLand)-1 ):
         
         pathPort = pathsPrt[numOfImagesPort]
-        pathLand = pathsLand[numOfImagesLand]
         #increase the index to get the next file in the next loop
         numOfImagesPort=numOfImagesPort+1
-        numOfImagesLand = numOfImagesLand+1
-        
         #if the next photo is out of bound then assign it to the first index
         if(numOfImagesPort >= len(pathsPrt)):# if total is 5 pic, 1st loop 0 > 6 /reset the loop   
             numOfImagesPort=0
-        if(numOfImagesLand >= len(pathsLand)):
-            numOfImagesLand=0
-            
-            
             
         # each image will take as following in percentage
         per_w_imgs_portriate = cal_per_num(42, scr_w)
         per_w_imgs_landscape= cal_per_num(50, scr_w)
-            
-        #Footer will take 8% of the screen width   
-        per_w_footer = cal_per_num(8, scr_w)
-        
+
         #Create the canvases
         canvasPort = Canvas(window,width=per_w_imgs_portriate, height=scr_h, bg=bgcolor, highlightthickness=10, highlightbackground=bgcolor)
-        canvasLand = Canvas(window,width=per_w_imgs_landscape, height=scr_h, bg=bgcolor, highlightthickness=10, highlightbackground=bgcolor)
-        canvasFoot = Canvas(window,width=per_w_footer, height=scr_h, bg=bgcolor, highlightthickness=1, highlightbackground=bgcolor)
+        
         #gird plays the canvas without it the canvas will not work
-        
-        
-        
-        
-        #pack(side='left')
-        canvasFoot.grid(row=0, column=0)
-        canvasLand.grid(row=0, column=2)
         canvasPort.grid(row=0, column=1)
 
-        
         #in order to make the picture fit in the rotated state in the half of the screen
         # we make the get_img_fit_size adjust it to us to that size by providing 
         # screen hight  as a width and half of the screen with as a height
-        imgPort = get_img_fit_size(pathPort, scr_h-z_out, per_w_imgs_landscape-z_out, True)
-        imgLand = get_img_fit_size(pathLand, scr_h, per_w_imgs_portriate, True)
-
-        
-        
-        #footerImg = get_img_fit_size(footerPath, scr_h, per_w_footer, True)
-        footerImg1 = Image.open(footerPath)
-        footerImg2 = footerImg1.transpose(Image.ROTATE_270)
-        footerImg3 = footerImg2.resize((int(per_w_footer),int(scr_h)), Image.ANTIALIAS)
-        footerImg = ImageTk.PhotoImage(footerImg3)
-        
+        imgPort = get_img_fit_size(pathPort, scr_h, per_w_imgs_landscape, True)
         
         portImgCanvas = canvasPort.create_image(int(scr_w/4.3),int(scr_h/2),anchor=CENTER, image=imgPort)
+        canvasPort.move(portImgCanvas, 0, -200)
+        window.update()
+        count, x, y = 0, 0 ,0
+        while count < 90:
+            y += 0.05
+            canvasPort.move(portImgCanvas, x, y)
+            time.sleep(0.01)
+            window.update()
+            count += 1
+            
+    
+        time.sleep(timeSleepVal/2)
+        
+        # Landscape image 
+        pathLand = pathsLand[numOfImagesLand]
+        numOfImagesLand = numOfImagesLand+1
+        
+        if(numOfImagesLand >= len(pathsLand)):
+            numOfImagesLand=0
+            
+        
+        canvasLand = Canvas(window,width=per_w_imgs_landscape, height=scr_h, bg=bgcolor, highlightthickness=10, highlightbackground=bgcolor)
+        canvasLand.grid(row=0, column=2)
+        imgLand = get_img_fit_size(pathLand, scr_h, per_w_imgs_portriate, True)
         landImgCanvas = canvasLand.create_image(int(scr_w/4.5),int(scr_h/2),anchor=CENTER, image=imgLand)
         
-        footer = canvasFoot.create_image(per_w_footer/2,scr_h/2,anchor=CENTER, image=footerImg)
-        
+        canvasLand.move(portImgCanvas, 0, -200)
         window.update()
-        time.sleep(timeSleepVal)
+        count2, x2, y2 = 0, 0 ,0
+        while count2 < 90:
+            y2 += 0.05
+            canvasLand.move(landImgCanvas, x2, y2)
+            time.sleep(0.01)
+            window.update()
+            count2 += 1
+            
+        window.update()
+        time.sleep(timeSleepVal/2)
         
     window.mainloop()
-
-
-
     
+# This Function is for creating new config file
+def createFile():
+    fileWrite=open("config",'w+')
+# This Function is for Replaceing content with a value to the config file
+def insertValue(value):
+    fileWrite=open("config",'w+')
+    fileWrite.write(value)
+    fileWrite.close()
+#This function runs when the check box is checked
+def checkBoxReboot():
+    #Check the Checkbox if it's checked or not
+    global chk
+    chkArr = chk.state()
+    if chkArr[2] == "selected":
+        print("The chekc box is selected")
+        createFile()
+        insertValue("True")
+    else:
+        print("The CheckBox is Not Selected")
+        createFile()
+        insertValue("False")
+#       
+def startOnReboot():
+    #Check the Checkbox if it's checked or not
+    global chk
+    chkArr = chk.state()
+    if chkArr[-1] == "selected":
+        print("The chekc box is selected")
+        createFile()
+        insertValue("True")
+    else:
+        print("The CheckBox is Not Selected")
+        createFile()
+        insertValue("False")
+    
+def close(event):
+    window.destroy()
+def hide_me(event):
+    event.widget.grid_forget()    
+
 #function to insert the footer file neme to the text input
 def insert():
     file = filedialog.askopenfilename()
     global footerPath
     footerPath.delete(0, 'end')
     footerPath.insert(0,file)
+def insertAllDir():
+    file = filedialog.askdirectory()
+    global allDirEntry
+    allDirEntry.delete(0, 'end')
+    allDirEntry.insert(0, file)
 def insertPortDir():
     file = filedialog.askdirectory()
     global portDirEntry
     portDirEntry.delete(0, 'end')
     portDirEntry.insert(0, file)
+def insertLandDir():
+    file = filedialog.askdirectory()
+    global landDirEntry
+    landDirEntry.delete(0, 'end')
+    landDirEntry.insert(0, file)
+    
+     
 def choose_color():
     global colorEntry
     # variable to store hexadecimal code of color
@@ -418,23 +476,108 @@ def choose_color():
     colorEntry.delete(0, 'end')
     colorEntry.insert(0, color_code[1])
     colorEntry.config({"background": colorEntry.get()})
+def toggle():
+    globals()
+    
+    if folderMode.config('relief')[-1] == 'sunken':
+        
+        # Show Single folder inputs
+        L3.grid(row=2, column=0,pady=5, padx=20)
+        allDirEntry.grid(row=2, column=1)
+        #Hid multiple folders input
+        L3Port.grid_forget()
+        L3Land.grid_forget()
+        portDirEntry.grid_forget()
+        landDirEntry.grid_forget()
+        port_btn.grid_forget()
+        land_btn.grid_forget()
+        #Enable Single view choice
+        #choice1.configure(state = NORMAL)
+
+        all_btn.grid(row=2, column=2,pady=5, padx=20)
+        folderMode.config(relief="raised")
+        folderMode.configure(bg='white')
+        
+        
+    else:
+        #hide single folder input 
+        L3.grid_forget()
+        allDirEntry.grid_forget()
+        all_btn.grid_forget()
+        # Show multiple folders inputs
+        L3Port.grid(row=2, column=0,pady=5, padx=20)
+        L3Land.grid(row=3, column=0,pady=5, padx=20)
+        portDirEntry.grid(row=2, column=1)
+        landDirEntry.grid(row=3, column=1)
+        port_btn.grid(row=2, column=2,pady=5, padx=20)
+        land_btn.grid(row=3, column=2,pady=5, padx=20)
+        #Disable Single view choice
+        #choice1.configure(state = DISABLED)
+        
+        folderMode.config(relief="sunken")
+        folderMode.configure(bg='#65fe5c')
+        
+        
+        
+
 # Check all inputs before procceding to the main functoin
+
 def checkPlay():
-    global timeSleep
-    global colorEntry
-    global footerPath
-    global portDirEntry
-    global error
+    
+    globals()
+    allDirEntryVal = allDirEntry.get() #getting folder path from input
+    portDirEntryVal = portDirEntry.get() #getting folder path from input
+    landDirEntryVal = landDirEntry.get() #getting folder path from input
+    
+    #When the user on single folder mode
+    if folderMode.config('relief')[-1] == 'raised':
+        #using allPaths function
+        allPaths = getPaths(allDirEntryVal) #sending it to the function to seperate and return multi dimention array
+        pathsPrt = allPaths[0] #potirate paths
+        pathsLand = allPaths[1] #landscape  pahes
+    # When the user on Multi folder mode
+    elif folderMode.config('relief')[-1] == 'sunken':
+        #Something is wrong with swapping, accourding to the testing I should replace them
+        pathsPrt = get_image_paths(landDirEntryVal)
+        pathsLand = get_image_paths(portDirEntryVal)
+
+    
+    
+    
+    
     
     #print ("resurt", Radio_Value0.get ())
-    #print(timeSleep.get(), colorEntry.get(),footerPath.get(),portDirEntry.get())
-    if timeSleep.get() != "" and colorEntry.get() != "" and footerPath.get() != "" and portDirEntry.get() != "":
-        if Radio_Value0.get () == 0:
-            Single_view()
+    #print(timeSleep.get(), colorEntry.get(),footerPath.get(),allDirEntry.get())
+    if timeSleep.get() != "" and colorEntry.get() != "" and footerPath.get() != "" and (allDirEntry.get() != "" or (portDirEntry.get() != "" and landDirEntry.get() != "")):
+        # Storing input values to variables
+        timeSleepVal = int(timeSleep.get())
+        footerPathVal = footerPath.get()
+        #geting director from entry boxes
+        
+        bgcolorVal = colorEntry.get()
+        
+        
+        #Removing all input elements
+        L1.destroy()
+        L2.destroy()
+        L3.destroy()
+        L4.destroy()
+        timeSleep.destroy()
+        footerPath.destroy()
+        colorEntry.destroy()
+        select_btn.destroy()
+        all_btn.destroy()
+        colorButton.destroy()
+        radioGroup.destroy()
+        button3.destroy()
+        
+       
+        if Radio_Value0.get () == 2:
+            Single_view(timeSleepVal,allDirEntryVal,bgcolorVal)
         elif Radio_Value0.get () == 1:
             Multi_view()
-        elif Radio_Value0.get () == 2:
-            Multi_view_rotate()
+        elif Radio_Value0.get () == 0:
+            Multi_view_rotate(timeSleepVal,footerPathVal,bgcolorVal,pathsPrt,pathsLand)
         else:
             error.configure(text="Something went wrong while detectig the view mode type")
             error.grid(row=7, column=1)
@@ -447,9 +590,7 @@ def checkPlay():
 
 error = Label(window, text="Error",fg="red")
 
-
-
-L1 = Label(window, text="time (Seconds)")
+L1 = Label(window, text="Time (Seconds)")
 L1.grid(row=0, column=0,pady=5, padx=20)
 
 L2 = Label(window, text="Footer photo Path")
@@ -458,60 +599,133 @@ L2.grid(row=1, column=0,pady=5, padx=20)
 L3 = Label(window, text="Pictures Folder")
 L3.grid(row=2, column=0,pady=5, padx=20)
 
+L3Port = Label(window, text="Portrait Folder")
+#L3Port.grid(row=2, column=0,pady=5, padx=20)
+
+
+L3Land = Label(window, text="Landscape Folder")
+#L3Land.grid(row=3, column=0,pady=5, padx=20)
+
 L4 = Label(window, text="Background color")
-L4.grid(row=4, column=0,pady=5, padx=20)
+L4.grid(row=5, column=0,pady=5, padx=20)
 
 timeSleep = tkinter.Entry(window)
-#timeSleep.insert(0, "2")
+timeSleep.insert(0, "4")
 timeSleep.grid(row=0, column=1)
 
 
 
 footerPath = tkinter.Entry(window,width=50)
-#footerPath.insert(0, "C:/Users/DotNet/Desktop/Ragazinana Data reduced/diashow/ragaziana_s.jpg")
+footerPath.insert(0, "C:/Users/DotNet/Desktop/Ragazinana Data reduced/diashow/ragaziana_s.jpg")
 footerPath.grid(row=1, column=1)
+
+allDirEntry = tkinter.Entry(window,width=50)
+allDirEntry.insert(0, "C:/Users/DotNet/Desktop/Ragazinana Data reduced/diashow/4 Random/Portrait")
+allDirEntry.grid(row=2, column=1)
 
 portDirEntry = tkinter.Entry(window,width=50)
 #portDirEntry.insert(0, "C:/Users/DotNet/Desktop/Ragazinana Data reduced/diashow/4 Random/Portrait")
-portDirEntry.grid(row=2, column=1)
+#portDirEntry.grid(row=2, column=1)
 
+landDirEntry = tkinter.Entry(window,width=50)
+#landDirEntry.insert(0, "C:/Users/DotNet/Desktop/Ragazinana Data reduced/diashow/4 Random/Portrait")
+#landDirEntry.grid(row=3, column=1)
 
 colorEntry = tkinter.Entry(window, width=50)
-colorEntry.grid(row=4, column=1)
+colorEntry.insert(0, "#ffffff")
+colorEntry.grid(row=5, column=1)
 
 select_btn = Button(window,text="Select file",width=10,command=insert)
 select_btn.grid(row=1, column=2,pady=5, padx=20)
 
+all_btn = Button(window,text="Select Folder",width=10,command=insertAllDir)
+all_btn.grid(row=2, column=2,pady=5, padx=20)
+
 port_btn = Button(window,text="Select Folder",width=10,command=insertPortDir)
-port_btn.grid(row=2, column=2,pady=5, padx=20)
+#port_btn.grid(row=2, column=2,pady=5, padx=20)
+
+land_btn = Button(window,text="Select Folder",width=10,command=insertLandDir)
+#land_btn.grid(row=3, column=2,pady=5, padx=20)
+
+
+
+folderMode = tkinter.Button(text="2 Folders Mode", width=12, relief="raised", command=toggle)
+folderMode.grid(row=6, column=0)
 
 colorButton = Button(window, text = "Select color",command = choose_color, width=10)
-colorButton.grid(row=4, column=2,pady=5, padx=20)
+colorButton.grid(row=5, column=2,pady=5, padx=20)
 
 radioGroup = LabelFrame(window, text = "Select view type")
-radioGroup.grid(row=5, column=1)
+radioGroup.grid(row=6, column=1)
 
 #Varibale to use in choices
 Radio_Value0 = tkinter.IntVar ()
 Radio_Value0.set(0)
 #Select view mode
-choice1 = ttk.Radiobutton(radioGroup, text="Single View", variable = Radio_Value0, value = 0)
-#choice1.configure(state = DISABLED)
-choice1.grid(row=5, column=0)
+choice1 = ttk.Radiobutton(radioGroup, text="Single View", variable = Radio_Value0, value = 2)
+choice1.configure(state = DISABLED)
+choice1.grid(row=6, column=0)
 choice2 = ttk.Radiobutton(radioGroup, text="Multi View", variable = Radio_Value0, value = 1)
-#choice2.configure(state = DISABLED)
-choice2.grid(row=5, column=1)
-choice3 = ttk.Radiobutton(radioGroup, text="Multi Rotated View", variable = Radio_Value0, value = 2)
-choice3.grid(row=5, column=2)
+choice2.configure(state = DISABLED)
+choice2.grid(row=6, column=1)
+choice3 = ttk.Radiobutton(radioGroup, text="Multi Rotated View", variable = Radio_Value0, value = 0)
+choice3.grid(row=6, column=2)
+
+
+
+chk = ttk.Checkbutton(window, text="Start Slideshow on Reboot", command=checkBoxReboot)
+chk.grid(row=7, column=0)
+
+
 
 
 button3=Button(window,text="Play",width=10,command=checkPlay, bg='#d5eaff')
 #button3.place(relx=0.7, rely=0.5, anchor=CENTER)
-button3.grid(row=5, column=2,pady=20, padx=20)
+button3.grid(row=6, column=2,pady=20, padx=20)
 #Full Screen keys
-window.bind('<Escape>', fullScreen)
-window.bind('<KP_Enter>', fullScreen)
+window.bind('<Escape>', close)
 window.bind('<Double 1>', fullScreen)
+
+
+#Check if config file is exists if it's not exists Create new one
+#Change the state of the checkbox accourign to the file state
+if path.exists("config"):
+    print("File is already Exists")
+    # Chack if config has True or false vlaue
+    file=open("config",'r')
+    chkValue=file.readline()
+    #Setup the Checkbox state Accourding to the content of the file
+    if chkValue == "True":
+        # Check the box if the state was enable
+        CheckVar = IntVar()
+        CheckVar.set(1)
+        chk.configure(variable = CheckVar)
+        print("State is Normal")
+        
+    else:
+        # Uncheck the box if the state was 
+        CheckVar = IntVar()
+        CheckVar.set(0)
+        chk.configure(variable = CheckVar)
+        print("State is Disabled") 
+        
+else:
+    #Create file and set it up on True
+    createFile()
+    insertValue("False")
+    print("File Have been created successfuly!")
+    
+
+
+#When getting outer paramater 
+try:
+    print(str(sys.argv[1]))
+    if str(sys.argv[1]) == "auto_run":
+        checkPlay()
+        
+except:
+    pass
+
 
 window.mainloop()
 
