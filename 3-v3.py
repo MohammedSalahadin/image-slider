@@ -8,11 +8,12 @@ from tkinter import *
 from tkinter import colorchooser
 from tkinter import ttk as ttk
 from tkinter import filedialog as filedialog
+import PIL
 from PIL import Image, ImageTk
 import os
 from os import path
 import time
-import sys
+import sys #used to accept outer arguments when running the file
 
 
 
@@ -522,7 +523,7 @@ def toggle():
 
 # Check all inputs before procceding to the main functoin
 
-def checkPlay():
+def checkPlay(mode="none"):
     
     globals()
     allDirEntryVal = allDirEntry.get() #getting folder path from input
@@ -535,8 +536,8 @@ def checkPlay():
         allPaths = getPaths(allDirEntryVal) #sending it to the function to seperate and return multi dimention array
         pathsPrt = allPaths[0] #potirate paths
         pathsLand = allPaths[1] #landscape  pahes
-    # When the user on Multi folder mode
-    elif folderMode.config('relief')[-1] == 'sunken':
+    # When the user on Multi folder mode or it recives the mode parameter
+    elif folderMode.config('relief')[-1] == 'sunken' or mode=="multi":
         #Something is wrong with swapping, accourding to the testing I should replace them
         pathsPrt = get_image_paths(landDirEntryVal)
         pathsLand = get_image_paths(portDirEntryVal)
@@ -624,11 +625,11 @@ allDirEntry.insert(0, "C:/Users/DotNet/Desktop/Ragazinana Data reduced/diashow/4
 allDirEntry.grid(row=2, column=1)
 
 portDirEntry = tkinter.Entry(window,width=50)
-#portDirEntry.insert(0, "C:/Users/DotNet/Desktop/Ragazinana Data reduced/diashow/4 Random/Portrait")
+portDirEntry.insert(0, "C:/Users/DotNet/Desktop/Ragazinana Data reduced/diashow/4 Random/Portrait")
 #portDirEntry.grid(row=2, column=1)
 
 landDirEntry = tkinter.Entry(window,width=50)
-#landDirEntry.insert(0, "C:/Users/DotNet/Desktop/Ragazinana Data reduced/diashow/4 Random/Portrait")
+landDirEntry.insert(0, "C:/Users/DotNet/Desktop/Ragazinana Data reduced/diashow/4 Random/Portrait")
 #landDirEntry.grid(row=3, column=1)
 
 colorEntry = tkinter.Entry(window, width=50)
@@ -686,6 +687,8 @@ button3.grid(row=6, column=2,pady=20, padx=20)
 window.bind('<Escape>', close)
 window.bind('<Double 1>', fullScreen)
 
+# This function returns True if config file content is True, False if next
+
 
 #Check if config file is exists if it's not exists Create new one
 #Change the state of the checkbox accourign to the file state
@@ -721,7 +724,7 @@ else:
 try:
     print(str(sys.argv[1]))
     if str(sys.argv[1]) == "auto_run":
-        checkPlay()
+        checkPlay("multi")
         
 except:
     pass
