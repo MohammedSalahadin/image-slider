@@ -18,8 +18,6 @@ import sys #used to accept outer arguments when running the file
 
 
 
-
-
 #getting list of pictures in directory
 def get_image_paths(input_dir='.'):
     paths = []
@@ -537,7 +535,7 @@ def checkPlay(mode="none"):
         pathsPrt = allPaths[0] #potirate paths
         pathsLand = allPaths[1] #landscape  pahes
     # When the user on Multi folder mode or it recives the mode parameter
-    elif folderMode.config('relief')[-1] == 'sunken' or mode=="multi":
+    if folderMode.config('relief')[-1] == 'sunken' or mode=="multi":
         #Something is wrong with swapping, accourding to the testing I should replace them
         pathsPrt = get_image_paths(landDirEntryVal)
         pathsLand = get_image_paths(portDirEntryVal)
@@ -717,13 +715,19 @@ else:
     createFile()
     insertValue("False")
     print("File Have been created successfuly!")
-    
+
+#Getting the requested 
+def readFileLine(line):
+    with open("config", "r") as text_file:
+        data = text_file.readlines()
+        return data[line]
 
 
 #When getting outer paramater 
+print("what we have got",readFileLine(0))
 try:
     print(str(sys.argv[1]))
-    if str(sys.argv[1]) == "auto_run":
+    if str(sys.argv[1]) == "auto_run" and readFileLine(0) == "True":#When incomming parameter is auto_run and file input is True
         checkPlay("multi")
         
 except:
