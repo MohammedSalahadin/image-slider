@@ -529,7 +529,7 @@ def checkPlay(mode="none"):
     landDirEntryVal = landDirEntry.get() #getting folder path from input
     
     #When the user on single folder mode
-    if folderMode.config('relief')[-1] == 'raised':
+    if folderMode.config('relief')[-1] == 'raised' and mode=="none":
         #using allPaths function
         allPaths = getPaths(allDirEntryVal) #sending it to the function to seperate and return multi dimention array
         pathsPrt = allPaths[0] #potirate paths
@@ -609,7 +609,7 @@ L4 = Label(window, text="Background color")
 L4.grid(row=5, column=0,pady=5, padx=20)
 
 timeSleep = tkinter.Entry(window)
-timeSleep.insert(0, "4")
+timeSleep.insert(0, "10")
 timeSleep.grid(row=0, column=1)
 
 
@@ -672,8 +672,8 @@ choice3.grid(row=6, column=2)
 
 
 
-chk = ttk.Checkbutton(window, text="Start Slideshow on Reboot", command=checkBoxReboot)
-chk.grid(row=7, column=0)
+#chk = ttk.Checkbutton(window, text="Start Slideshow on Reboot", command=checkBoxReboot)
+#chk.grid(row=7, column=0)
 
 
 
@@ -690,31 +690,33 @@ window.bind('<Double 1>', fullScreen)
 
 #Check if config file is exists if it's not exists Create new one
 #Change the state of the checkbox accourign to the file state
-if path.exists("config"):
-    print("File is already Exists")
-    # Chack if config has True or false vlaue
-    file=open("config",'r')
-    chkValue=file.readline()
-    #Setup the Checkbox state Accourding to the content of the file
-    if chkValue == "True":
-        # Check the box if the state was enable
-        CheckVar = IntVar()
-        CheckVar.set(1)
-        chk.configure(variable = CheckVar)
-        print("State is Normal")
-        
-    else:
-        # Uncheck the box if the state was 
-        CheckVar = IntVar()
-        CheckVar.set(0)
-        chk.configure(variable = CheckVar)
-        print("State is Disabled") 
-        
-else:
-    #Create file and set it up on True
-    createFile()
-    insertValue("False")
-    print("File Have been created successfuly!")
+# =============================================================================
+# if path.exists("config"):
+#     print("File is already Exists")
+#     # Chack if config has True or false vlaue
+#     file=open("config",'r')
+#     chkValue=file.readline()
+#     #Setup the Checkbox state Accourding to the content of the file
+#     if chkValue == "True":
+#         # Check the box if the state was enable
+#         CheckVar = IntVar()
+#         CheckVar.set(1)
+#         chk.configure(variable = CheckVar)
+#         print("State is Normal")
+#         
+#     else:
+#         # Uncheck the box if the state was 
+#         CheckVar = IntVar()
+#         CheckVar.set(0)
+#         chk.configure(variable = CheckVar)
+#         print("State is Disabled") 
+#         
+# else:
+#     #Create file and set it up on True
+#     createFile()
+#     insertValue("False")
+#     print("File Have been created successfuly!")
+# =============================================================================
 
 #Getting the requested 
 def readFileLine(line):
@@ -727,7 +729,7 @@ def readFileLine(line):
 print("what we have got",readFileLine(0))
 try:
     print(str(sys.argv[1]))
-    if str(sys.argv[1]) == "auto_run" and readFileLine(0) == "True":#When incomming parameter is auto_run and file input is True
+    if str(sys.argv[1]) == "auto_run":#When incomming parameter is auto_run and file input is True
         checkPlay("multi")
         
 except:
