@@ -170,7 +170,7 @@ def cal_per_num(percentage, number):
 
 #Creating tk window
 window = Tk(className="Ragaziana Slide Show")
-window.iconbitmap(r'C:\Users\DotNet\Desktop\slideshow\img_slider\image-slider\app.ico')
+#window.iconbitmap('/home/pi/image-slider/app.ico')
 
 #getting the screen width and hieight
 scr_w = window.winfo_screenwidth()
