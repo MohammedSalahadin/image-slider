@@ -615,7 +615,7 @@ timeSleep.grid(row=0, column=1)
 
 
 footerPath = tkinter.Entry(window,width=50)
-footerPath.insert(0, "C:/Users/DotNet/Desktop/Ragazinana Data reduced/diashow/ragaziana_s.jpg")
+footerPath.insert(0, "/home/pi/Desktop/diashow//ragaziana_s.jpg")
 footerPath.grid(row=1, column=1)
 
 allDirEntry = tkinter.Entry(window,width=50)
