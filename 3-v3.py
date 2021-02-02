@@ -178,7 +178,7 @@ scr_h = window.winfo_screenheight()
 
 
 #making the tk window size equal to the screen size
-window.geometry("580x240")
+window.geometry("700x280")
 
 #after play
 
@@ -619,15 +619,15 @@ footerPath.insert(0, "C:/Users/DotNet/Desktop/Ragazinana Data reduced/diashow/ra
 footerPath.grid(row=1, column=1)
 
 allDirEntry = tkinter.Entry(window,width=50)
-allDirEntry.insert(0, "C:/Users/DotNet/Desktop/Ragazinana Data reduced/diashow/4 Random/Portrait")
+allDirEntry.insert(0, "")
 allDirEntry.grid(row=2, column=1)
 
 portDirEntry = tkinter.Entry(window,width=50)
-portDirEntry.insert(0, "C:/Users/DotNet/Desktop/Ragazinana Data reduced/diashow/4 Random/Portrait")
+portDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Portrait")
 #portDirEntry.grid(row=2, column=1)
 
 landDirEntry = tkinter.Entry(window,width=50)
-landDirEntry.insert(0, "C:/Users/DotNet/Desktop/Ragazinana Data reduced/diashow/4 Random/Portrait")
+landDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Landschaft")
 #landDirEntry.grid(row=3, column=1)
 
 colorEntry = tkinter.Entry(window, width=50)
