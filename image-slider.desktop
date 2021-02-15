@@ -1,0 +1,4 @@
+[Desktop Entry]
+Type=Application
+Name=Clock
+Exec=xterm -hold -e '/usr/bin/python3 /home/pi/image-slider/3-v3.py auto_run'

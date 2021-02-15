@@ -726,7 +726,7 @@ def readFileLine(line):
 
 
 #When getting outer paramater 
-print("what we have got",readFileLine(0))
+#print("what we have got",readFileLine(0))
 try:
     print(str(sys.argv[1]))
     if str(sys.argv[1]) == "auto_run":#When incomming parameter is auto_run and file input is True
