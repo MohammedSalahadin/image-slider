@@ -23,7 +23,7 @@ def get_image_paths(input_dir='.'):
     paths = []
     for root, dirs, files in os.walk(input_dir, topdown=True):
         for file in sorted(files):
-            if file.endswith(('jpg', 'png')):
+            if file.endswith(('jpg', 'png', 'jpeg','gif')):
                 path = os.path.abspath(os.path.join(root, file))
                 paths.append(path)
     return paths
@@ -76,6 +76,7 @@ def get_img_fit_size(path, scr_w, scr_h, rotate):
     # Getting 
     img_w = imgsize.width()
     img_h = imgsize.height()
+    
     # when the width of the photo is more than it's height and more than screen width
     if img_w > img_h and img_w > scr_w and img_h > scr_h:
         #determining the image size accouring to the equasion
@@ -120,7 +121,8 @@ def get_img_fit_size(path, scr_w, scr_h, rotate):
             img = ImageTk.PhotoImage(img3)
         else:
             print("Missing rotate attribute")
-        
+            
+    # When the image width is larger than the image height and the image hieght is smaller than screen hieght
     elif img_w <= scr_w and img_h <= scr_h:
         print("Case 3")
         img1 = Image.open(path)
@@ -133,7 +135,8 @@ def get_img_fit_size(path, scr_w, scr_h, rotate):
             img = ImageTk.PhotoImage(img2.rotate(angle))
         else:
             print("Missing rotate attribute")
-        
+            
+    # When image width is equal to image height and the image width is bigger than screen width
     elif img_w == img_h and img_w > scr_w:
         print("Case 4")
         img1 = Image.open(path)
@@ -146,6 +149,7 @@ def get_img_fit_size(path, scr_w, scr_h, rotate):
             img = ImageTk.PhotoImage(img2.rotate(angle))
         else:
             print("Missing rotate attribute")
+    
     else:
         print("Non of above conditions",img_w, img_h, scr_w, scr_h)
         img1 = Image.open(path)
@@ -661,15 +665,18 @@ radioGroup.grid(row=6, column=1)
 Radio_Value0 = tkinter.IntVar ()
 Radio_Value0.set(0)
 #Select view mode
-choice1 = ttk.Radiobutton(radioGroup, text="Single View", variable = Radio_Value0, value = 2)
-choice1.configure(state = DISABLED)
-choice1.grid(row=6, column=0)
-choice2 = ttk.Radiobutton(radioGroup, text="Multi View", variable = Radio_Value0, value = 1)
-choice2.configure(state = DISABLED)
-choice2.grid(row=6, column=1)
-choice3 = ttk.Radiobutton(radioGroup, text="Multi Rotated View", variable = Radio_Value0, value = 0)
+# =============================================================================
+# choice1 = ttk.Radiobutton(radioGroup, text="Single View", variable = Radio_Value0, value = 2)
+# choice1.configure(state = DISABLED)
+# choice1.grid(row=6, column=0)
+# choice2 = ttk.Radiobutton(radioGroup, text="Multi View", variable = Radio_Value0, value = 1)
+# choice2.configure(state = DISABLED)
+# choice2.grid(row=6, column=1)
+# =============================================================================
+choice3 = ttk.Radiobutton(radioGroup, text="Multi Rotated -90", variable = Radio_Value0, value = 0)
 choice3.grid(row=6, column=2)
-
+choice3 = ttk.Radiobutton(radioGroup, text="Multi Rotated +90", variable = Radio_Value0, value = 3)
+choice3.grid(row=6, column=3)
 
 
 #chk = ttk.Checkbutton(window, text="Start Slideshow on Reboot", command=checkBoxReboot)
