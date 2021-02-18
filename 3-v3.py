@@ -520,8 +520,6 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
     footerImg = ImageTk.PhotoImage(footerImg3)
     footer = canvasFoot.create_image(per_w_footer/2,scr_h/2,anchor=CENTER, image=footerImg)
     
-    
-    
     while(numOfImagesPort<=len(pathsPrt)-1 or numOfImagesLand<=len(pathsLand)-1 ):
         
         pathPort = pathsPrt[numOfImagesPort]
@@ -546,9 +544,7 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         # screen hight  as a width and half of the screen with as a height
         imgPort = get_img_fit_size(pathPort, scr_h, per_w_imgs_landscape, True, direction)
         
-        # Reason of the below code to keep the screen full for the first run
-        canvasLand = Canvas(window,width=per_w_imgs_landscape, height=scr_h, bg=bgcolor, highlightthickness=8, highlightbackground=bgcolor)
-        canvasLand.grid(row=0, column=0)
+        
         
         portImgCanvas = canvasPort.create_image(int(scr_w/4.3),int(scr_h/2),anchor=CENTER, image=imgPort)
         canvasPort.move(portImgCanvas, 0, -200)
