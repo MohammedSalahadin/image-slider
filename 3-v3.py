@@ -797,8 +797,8 @@ timeSleep.grid(row=0, column=1)
 
 
 footerPath = tkinter.Entry(window,width=50)
-#footerPath.insert(0, "/home/pi/Desktop/diashow//ragaziana_s.jpg")
-footerPath.insert(0, "C:/Users/DotNet/Desktop/diashow/ragaziana_s.jpg")
+footerPath.insert(0, "/home/pi/Desktop/diashow//ragaziana_s.jpg")
+#footerPath.insert(0, "C:/Users/DotNet/Desktop/diashow/ragaziana_s.jpg")
 footerPath.grid(row=1, column=1)
 
 allDirEntry = tkinter.Entry(window,width=50)
@@ -806,13 +806,13 @@ allDirEntry.insert(0, "")
 allDirEntry.grid(row=2, column=1)
 
 portDirEntry = tkinter.Entry(window,width=50)
-#portDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Portrait")
-portDirEntry.insert(0, "C:/Users/DotNet/Desktop/diashow/4 Random/Portrait")
+portDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Portrait")
+#portDirEntry.insert(0, "C:/Users/DotNet/Desktop/diashow/4 Random/Portrait")
 #portDirEntry.grid(row=2, column=1)
 
 landDirEntry = tkinter.Entry(window,width=50)
-#landDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Landschaft")
-landDirEntry.insert(0, "C:/Users/DotNet/Desktop/diashow/4 Random/Landschaft")
+landDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Landschaft")
+#landDirEntry.insert(0, "C:/Users/DotNet/Desktop/diashow/4 Random/Landschaft")
 
 #landDirEntry.grid(row=3, column=1)
 
