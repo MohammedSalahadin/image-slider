@@ -855,9 +855,9 @@ Radio_Value0.set(0)
 # choice2.configure(state = DISABLED)
 # choice2.grid(row=6, column=1)
 # =============================================================================
-choice3 = ttk.Radiobutton(radioGroup, text="Multi Rotated +90", variable = Radio_Value0, value = 0)
+choice3 = ttk.Radiobutton(radioGroup, text="Standerd", variable = Radio_Value0, value = 0)
 choice3.grid(row=6, column=2)
-choice3 = ttk.Radiobutton(radioGroup, text="Multi Rotated -90 (270)", variable = Radio_Value0, value = 1)
+choice3 = ttk.Radiobutton(radioGroup, text="Rotate", variable = Radio_Value0, value = 1)
 choice3.grid(row=6, column=3)
 
 
