@@ -67,7 +67,7 @@ def getPaths(inputDir = '.'):
                     print("not landscape or portirate")
     return portPaths, landPaths
 
-def get_img_fit_size(path, scr_w, scr_h, rotate):
+def get_img_fit_size(path, scr_w, scr_h, rotate, direction='none'):
     
     print("Path:", path)
     
@@ -92,10 +92,52 @@ def get_img_fit_size(path, scr_w, scr_h, rotate):
             img2 = img1.resize(((int(scr_w), var)), Image.ANTIALIAS)
             img = ImageTk.PhotoImage(img2)
         elif rotate == True:
-            #using transpose function instead of rotate to avoid cropping sides
-            img2 = img1.transpose(Image.ROTATE_270)
+            #setup the direction of the image accourding to the incoimming arguments
+            if direction == '90':
+                #using transpose function instead of rotate to avoid cropping sides
+                img2 = img1.transpose(Image.ROTATE_90)
+            elif direction == '270':
+                #using transpose function instead of rotate to avoid cropping sides
+                img2 = img1.transpose(Image.ROTATE_270)
+            else:
+                print("wrong argument for direction of rotation")
+                return None
+                
             #Exchanging hieght with width value positions to make it work correctly
             img3 = img2.resize((var,int(scr_h)), Image.ANTIALIAS)
+            #Save the result to img
+            img = ImageTk.PhotoImage(img3)
+        else:
+            print("Missing rotate attribute")
+            
+    # When the width of the photo is more than it's height and more than screen width but img height is less than screen height
+    elif img_w > img_h and img_w > scr_w and img_h < scr_h:
+        #determining the image size accouring to the equasion
+        # x * img_w = scr_w, then multiply x by the img_h, 
+        # so in conclusion we multiply the hight by the same number that we have multiplied the x with in oreder to fit the new screen size
+        print("Case 2",img_w, img_h, scr_w, scr_h)
+        x = (scr_h/img_h)
+        var = x * img_w
+        img1 = Image.open(path)
+        
+        
+        #checking rotation if requested or not
+        if rotate == False:
+            img2 = img1.resize((var,int(scr_w)), Image.ANTIALIAS)
+            img = ImageTk.PhotoImage(img2)
+        elif rotate == True:
+             #setup the direction of the image accourding to the incoimming arguments
+            if direction == '90':
+                #using transpose function instead of rotate to avoid cropping sides
+                img2 = img1.transpose(Image.ROTATE_90)
+            elif direction == '270':
+                #using transpose function instead of rotate to avoid cropping sides
+                img2 = img1.transpose(Image.ROTATE_270)
+            else:
+                print("wrong argument for direction of rotation")
+                return None
+            #Exchanging hieght with width value positions to make it work correctly
+            img3 = img2.resize((int(scr_h),var), Image.ANTIALIAS)
             #Save the result to img
             img = ImageTk.PhotoImage(img3)
         else:
@@ -104,7 +146,7 @@ def get_img_fit_size(path, scr_w, scr_h, rotate):
     
     # when the hieght of the image is more than it's width and also more than screen height
     elif img_h > img_w and img_h > scr_h:
-        print("Case 2")
+        print("Case 3")
         var = int(img_w*(scr_h/img_h))
         img1 = Image.open(path)
         
@@ -114,8 +156,16 @@ def get_img_fit_size(path, scr_w, scr_h, rotate):
             img2 = img1.resize((var, int(scr_h)), Image.ANTIALIAS)
             img = ImageTk.PhotoImage(img2)
         elif rotate == True:
-            #using transpose function instead of rotate to avoid cropping sides
-            img2 = img1.transpose(Image.ROTATE_270)
+            #setup the direction of the image accourding to the incoimming arguments
+            if direction == '90':
+                #using transpose function instead of rotate to avoid cropping sides
+                img2 = img1.transpose(Image.ROTATE_90)
+            elif direction == '270':
+                #using transpose function instead of rotate to avoid cropping sides
+                img2 = img1.transpose(Image.ROTATE_270)
+            else:
+                print("wrong argument for direction of rotation")
+                return None
             #Exchanging hieght with width value positions to make it work correctly
             img3 = img2.resize((int(scr_h),var ), Image.ANTIALIAS)
             img = ImageTk.PhotoImage(img3)
@@ -124,7 +174,7 @@ def get_img_fit_size(path, scr_w, scr_h, rotate):
             
     # When the image width is larger than the image height and the image hieght is smaller than screen hieght
     elif img_w <= scr_w and img_h <= scr_h:
-        print("Case 3")
+        print("Case 4")
         img1 = Image.open(path)
         img2 = img1.resize((img_w-out, img_h-out), Image.ANTIALIAS)
         
@@ -132,13 +182,22 @@ def get_img_fit_size(path, scr_w, scr_h, rotate):
         if rotate == False:
             img = ImageTk.PhotoImage(img2)
         elif rotate == True:
-            img = ImageTk.PhotoImage(img2.rotate(angle))
+             #setup the direction of the image accourding to the incoimming arguments
+            if direction == '90':
+                #using transpose function instead of rotate to avoid cropping sides
+                img2 = img1.transpose(Image.ROTATE_90)
+            elif direction == '270':
+                #using transpose function instead of rotate to avoid cropping sides
+                img2 = img1.transpose(Image.ROTATE_270)
+            else:
+                print("wrong argument for direction of rotation")
+                return None
         else:
             print("Missing rotate attribute")
             
     # When image width is equal to image height and the image width is bigger than screen width
     elif img_w == img_h and img_w > scr_w:
-        print("Case 4")
+        print("Case 5")
         img1 = Image.open(path)
         img2 = img1.resize((scr_w, scr_h), Image.ANTIALIAS)
         
@@ -146,7 +205,16 @@ def get_img_fit_size(path, scr_w, scr_h, rotate):
         if rotate == False:
             img = ImageTk.PhotoImage(img2)
         elif rotate == True:
-            img = ImageTk.PhotoImage(img2.rotate(angle))
+             #setup the direction of the image accourding to the incoimming arguments
+            if direction == '90':
+                #using transpose function instead of rotate to avoid cropping sides
+                img2 = img1.transpose(Image.ROTATE_90)
+            elif direction == '270':
+                #using transpose function instead of rotate to avoid cropping sides
+                img2 = img1.transpose(Image.ROTATE_270)
+            else:
+                print("wrong argument for direction of rotation")
+                return None
         else:
             print("Missing rotate attribute")
     
@@ -159,10 +227,18 @@ def get_img_fit_size(path, scr_w, scr_h, rotate):
         if rotate == False:
             img = ImageTk.PhotoImage(img2)
         elif rotate == True:
-            img = ImageTk.PhotoImage(img2.rotate(angle))
+             #setup the direction of the image accourding to the incoimming arguments
+            if direction == '90':
+                #using transpose function instead of rotate to avoid cropping sides
+                img2 = img1.transpose(Image.ROTATE_90)
+            elif direction == '270':
+                #using transpose function instead of rotate to avoid cropping sides
+                img2 = img1.transpose(Image.ROTATE_270)
+            else:
+                print("wrong argument for direction of rotation")
+                return None
         else:
             print("Missing rotate attribute")
-            
     return img
 
 #function inputs percentage and number and outputs how much is that percentage in the number
@@ -214,110 +290,116 @@ numOfImages = 0
 numOfImagesPort=0 
 numOfImagesLand=0
    
-def Single_view(timeSleep,directory,colorEntry):
-    window.geometry(str(scr_w)+"x"+str(scr_h)+"+0+0")
-    window.attributes('-fullscreen', True)
+# =============================================================================
+# def Single_view(timeSleep,directory,colorEntry):
+#     window.geometry(str(scr_w)+"x"+str(scr_h)+"+0+0")
+#     window.attributes('-fullscreen', True)
+#     
+#     
+#     #directory = allDirEntry.get()
+#     #directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Portrait"
+#     #Get paths
+#     paths = get_image_paths(directory)
+#     #read the image 
+#     #call the function to get the picture object with new size
+#     global numOfImages
+#     
+#     path = paths[numOfImages]
+#     
+#     while(numOfImages<=len(paths)-1):#if total is 5 pictures then 1st loop 0 <= 6-1 ==> 0 <= 5 ,2nd loop 1 <= 5
+#         
+#         path = paths[numOfImages]
+#         numOfImages=numOfImages+1
+#         
+#         if(numOfImages>len(paths)):# if total is 5 pic, 1st loop 0 > 6 /reset the loop
+#             numOfImages=0 
+#         
+#         
+#         #createing canvas and make it equal to the screen width and hight
+#         canvas = Canvas(window,width=scr_w, height=scr_h, bg=bgcolor)
+#         #gird plays the canvas without it the canvas will not work
+#         canvas.grid(row=0,column=0)
+#         
+#         
+#         
+#         img = get_img_fit_size(path, scr_w, scr_h, False)
+#         my_image = canvas.create_image(int(scr_w/2),int(scr_h/2),anchor=CENTER, image=img)
+#         
+#         
+#         #Text View
+#         path_arr = path.split("\\") # split the direcoties of the image path 
+#         f_img = (path_arr[-1]) # get the last index of the array of the path
+#         result = f_img[:-4] # Remve last characters from the image name
+#         description = result
+#     
+#         my_regtangle = canvas.create_rectangle(scr_w/2-250,scr_h/1.15-20,scr_w/2+250,scr_h/1.15+20,fill="black")
+#         
+#         my_message = canvas.create_text(scr_w/2,scr_h/1.15,fill="#fff",font="family",text=description,anchor="center")
+#         window.update()
+#         time.sleep(timeSleep)
+#     
+#     window.mainloop()
+#     
+# def Multi_view():
+#     window.geometry(str(scr_w)+"x"+str(scr_h)+"+0+0")
+#     window.attributes('-fullscreen', True)
+#     
+#     global timeSleep
+#     timeSleep = int(timeSleep.get())
+#     global colorEntry
+#     bgcolor = colorEntry.get()
+#     
+#     #Getting Directory from user input
+#     directory = allDirEntry.get()
+#     #directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Portrait"
+#     #Get paths
+#     paths = get_image_paths(directory)
+#     #read the image 
+#     #call the function to get the picture object with new size
+#     global numOfImages
+#     
+#    
+#     while(numOfImages<=len(paths)-1):
+#         path = paths[numOfImages]
+#         numOfImages=numOfImages+1
+#         
+#         #Reset the while loop
+#         if(numOfImages >= len(paths)):# if total is 5 pic, 1st loop 0 > 6 /reset the loop
+#             numOfImages=0
+#             continue 
+#         path2 = paths[numOfImages]
+#         numOfImages=numOfImages+1
+#             
+#             
+#         
+#         canvas = Canvas(window,width=scr_w/2, height=scr_h, bg=bgcolor)
+#         canvas2 = Canvas(window,width=scr_w/2, height=scr_h, bg=bgcolor)
+#         #gird plays the canvas without it the canvas will not work
+#         canvas.grid(row=0,column=0)
+#         canvas2.grid(row=0, column = 1)
+#         
+#         img = get_img_fit_size(path, scr_w/2, scr_h,False)
+#         img2 = get_img_fit_size(path2, scr_w/2, scr_h,False)
+#         
+#         my_image = canvas.create_image(int(scr_w/4),int(scr_h/2),anchor=CENTER, image=img)
+#         my_image_2 = canvas2.create_image(int(scr_w/4),int(scr_h/2),anchor=CENTER, image=img2)
+#         
+#         window.update()
+#         time.sleep(timeSleep)
+#         
+#     window.mainloop()
+#     
+# =============================================================================
     
+def Multi_view_rotate_270(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
     
-    #directory = allDirEntry.get()
-    #directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Portrait"
-    #Get paths
-    paths = get_image_paths(directory)
-    #read the image 
-    #call the function to get the picture object with new size
-    global numOfImages
-    
-    path = paths[numOfImages]
-    
-    while(numOfImages<=len(paths)-1):#if total is 5 pictures then 1st loop 0 <= 6-1 ==> 0 <= 5 ,2nd loop 1 <= 5
-        
-        path = paths[numOfImages]
-        numOfImages=numOfImages+1
-        
-        if(numOfImages>len(paths)):# if total is 5 pic, 1st loop 0 > 6 /reset the loop
-            numOfImages=0 
-        
-        
-        #createing canvas and make it equal to the screen width and hight
-        canvas = Canvas(window,width=scr_w, height=scr_h, bg=bgcolor)
-        #gird plays the canvas without it the canvas will not work
-        canvas.grid(row=0,column=0)
-        
-        
-        
-        img = get_img_fit_size(path, scr_w, scr_h, False)
-        my_image = canvas.create_image(int(scr_w/2),int(scr_h/2),anchor=CENTER, image=img)
-        
-        
-        #Text View
-        path_arr = path.split("\\") # split the direcoties of the image path 
-        f_img = (path_arr[-1]) # get the last index of the array of the path
-        result = f_img[:-4] # Remve last characters from the image name
-        description = result
-    
-        my_regtangle = canvas.create_rectangle(scr_w/2-250,scr_h/1.15-20,scr_w/2+250,scr_h/1.15+20,fill="black")
-        
-        my_message = canvas.create_text(scr_w/2,scr_h/1.15,fill="#fff",font="family",text=description,anchor="center")
-        window.update()
-        time.sleep(timeSleep)
-    
-    window.mainloop()
-    
-def Multi_view():
-    window.geometry(str(scr_w)+"x"+str(scr_h)+"+0+0")
-    window.attributes('-fullscreen', True)
-    
-    global timeSleep
-    timeSleep = int(timeSleep.get())
-    global colorEntry
-    bgcolor = colorEntry.get()
-    
-    #Getting Directory from user input
-    directory = allDirEntry.get()
-    #directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Portrait"
-    #Get paths
-    paths = get_image_paths(directory)
-    #read the image 
-    #call the function to get the picture object with new size
-    global numOfImages
-    
-   
-    while(numOfImages<=len(paths)-1):
-        path = paths[numOfImages]
-        numOfImages=numOfImages+1
-        
-        #Reset the while loop
-        if(numOfImages >= len(paths)):# if total is 5 pic, 1st loop 0 > 6 /reset the loop
-            numOfImages=0
-            continue 
-        path2 = paths[numOfImages]
-        numOfImages=numOfImages+1
-            
-            
-        
-        canvas = Canvas(window,width=scr_w/2, height=scr_h, bg=bgcolor)
-        canvas2 = Canvas(window,width=scr_w/2, height=scr_h, bg=bgcolor)
-        #gird plays the canvas without it the canvas will not work
-        canvas.grid(row=0,column=0)
-        canvas2.grid(row=0, column = 1)
-        
-        img = get_img_fit_size(path, scr_w/2, scr_h,False)
-        img2 = get_img_fit_size(path2, scr_w/2, scr_h,False)
-        
-        my_image = canvas.create_image(int(scr_w/4),int(scr_h/2),anchor=CENTER, image=img)
-        my_image_2 = canvas2.create_image(int(scr_w/4),int(scr_h/2),anchor=CENTER, image=img2)
-        
-        window.update()
-        time.sleep(timeSleep)
-        
-    window.mainloop()
-    
-    
-def Multi_view_rotate(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
+    print("-90 (270) view");
     #Creating tk window
     window.attributes('-fullscreen', True)
     window.geometry(str(scr_w)+"x"+str(scr_h)+"+0+0")
     
+    #Setup the direction of the rotation
+    direction = "270"
 
     #read the image 
     #call the function to get the picture object with new size
@@ -363,7 +445,7 @@ def Multi_view_rotate(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         #in order to make the picture fit in the rotated state in the half of the screen
         # we make the get_img_fit_size adjust it to us to that size by providing 
         # screen hight  as a width and half of the screen with as a height
-        imgPort = get_img_fit_size(pathPort, scr_h, per_w_imgs_landscape, True)
+        imgPort = get_img_fit_size(pathPort, scr_h, per_w_imgs_landscape, True, direction)
         
         portImgCanvas = canvasPort.create_image(int(scr_w/4.3),int(scr_h/2),anchor=CENTER, image=imgPort)
         canvasPort.move(portImgCanvas, 0, -200)
@@ -389,7 +471,7 @@ def Multi_view_rotate(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         
         canvasLand = Canvas(window,width=per_w_imgs_landscape, height=scr_h, bg=bgcolor, highlightthickness=10, highlightbackground=bgcolor)
         canvasLand.grid(row=0, column=2)
-        imgLand = get_img_fit_size(pathLand, scr_h, per_w_imgs_portriate, True)
+        imgLand = get_img_fit_size(pathLand, scr_h, per_w_imgs_portriate, True,direction)
         landImgCanvas = canvasLand.create_image(int(scr_w/4.5),int(scr_h/2),anchor=CENTER, image=imgLand)
         
         canvasLand.move(portImgCanvas, 0, -200)
@@ -406,7 +488,102 @@ def Multi_view_rotate(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         time.sleep(timeSleepVal/2)
         
     window.mainloop()
+
+def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
+    print("90 View")
+        #Creating tk window
+    window.attributes('-fullscreen', True)
+    window.geometry(str(scr_w)+"x"+str(scr_h)+"+0+0")
     
+    #direction
+    direction = "90"
+    #read the image 
+    #call the function to get the picture object with new size
+    global numOfImagesPort
+    global numOfImagesLand
+    #footer path
+    #footerPath = "C:/Users/DotNet/Desktop/Ragazinana Data reduced/diashow/ragaziana_s.jpg"
+    
+    #Footer will take 8% of the screen width   
+    per_w_footer = cal_per_num(8, scr_w)
+    # Footer Image operations
+    canvasFoot = Canvas(window,width=per_w_footer, height=scr_h, bg=bgcolor, highlightthickness=1, highlightbackground=bgcolor)
+    canvasFoot.grid(row=0, column=2)
+
+    
+    #footerImg = get_img_fit_size(footerPath, scr_h, per_w_footer, True)
+    footerImg1 = Image.open(footerPath)
+    footerImg2 = footerImg1.transpose(Image.ROTATE_90)
+    footerImg3 = footerImg2.resize((int(per_w_footer),int(scr_h)), Image.ANTIALIAS)
+    footerImg = ImageTk.PhotoImage(footerImg3)
+    footer = canvasFoot.create_image(per_w_footer/2,scr_h/2,anchor=CENTER, image=footerImg)
+    
+    
+    while(numOfImagesPort<=len(pathsPrt)-1 or numOfImagesLand<=len(pathsLand)-1 ):
+        
+        pathPort = pathsPrt[numOfImagesPort]
+        #increase the index to get the next file in the next loop
+        numOfImagesPort=numOfImagesPort+1
+        #if the next photo is out of bound then assign it to the first index
+        if(numOfImagesPort >= len(pathsPrt)):# if total is 5 pic, 1st loop 0 > 6 /reset the loop   
+            numOfImagesPort=0
+            
+        # each image will take as following in percentage
+        per_w_imgs_portriate = cal_per_num(42, scr_w)
+        per_w_imgs_landscape= cal_per_num(46, scr_w)
+
+        #Create the canvases
+        canvasPort = Canvas(window,width=per_w_imgs_portriate, height=scr_h, bg=bgcolor, highlightthickness=8, highlightbackground=bgcolor)
+        
+        #gird plays the canvas without it the canvas will not work
+        canvasPort.grid(row=0, column=1)
+
+        #in order to make the picture fit in the rotated state in the half of the screen
+        # we make the get_img_fit_size adjust it to us to that size by providing 
+        # screen hight  as a width and half of the screen with as a height
+        imgPort = get_img_fit_size(pathPort, scr_h, per_w_imgs_landscape, True, direction)
+        
+        portImgCanvas = canvasPort.create_image(int(scr_w/4.3),int(scr_h/2),anchor=CENTER, image=imgPort)
+        canvasPort.move(portImgCanvas, 0, -200)
+        window.update()
+        count, x, y = 0, 0 ,0
+        while count < 90:
+            y += 0.05
+            canvasPort.move(portImgCanvas, x, y)
+            time.sleep(0.01)
+            window.update()
+            count += 1
+            
+    
+        time.sleep(timeSleepVal/2)
+        
+        # Landscape image 
+        pathLand = pathsLand[numOfImagesLand]
+        numOfImagesLand = numOfImagesLand+1
+        
+        if(numOfImagesLand >= len(pathsLand)):
+            numOfImagesLand=0
+            
+        
+        canvasLand = Canvas(window,width=per_w_imgs_landscape, height=scr_h, bg=bgcolor, highlightthickness=8, highlightbackground=bgcolor)
+        canvasLand.grid(row=0, column=0)
+        imgLand = get_img_fit_size(pathLand, scr_h, per_w_imgs_portriate, True, direction)
+        landImgCanvas = canvasLand.create_image(int(scr_w/4.5),int(scr_h/2),anchor=CENTER, image=imgLand)
+        
+        canvasLand.move(portImgCanvas, 0, -200)
+        window.update()
+        count2, x2, y2 = 0, 0 ,0
+        while count2 < 90:
+            y2 += 0.05
+            canvasLand.move(landImgCanvas, x2, y2)
+            time.sleep(0.01)
+            window.update()
+            count2 += 1
+            
+        window.update()
+        time.sleep(timeSleepVal/2)
+        
+    window.mainloop()
 # This Function is for creating new config file
 def createFile():
     fileWrite=open("config",'w+')
@@ -546,9 +723,6 @@ def checkPlay(mode="none"):
 
     
     
-    
-    
-    
     #print ("resurt", Radio_Value0.get ())
     #print(timeSleep.get(), colorEntry.get(),footerPath.get(),allDirEntry.get())
     if timeSleep.get() != "" and colorEntry.get() != "" and footerPath.get() != "" and (allDirEntry.get() != "" or (portDirEntry.get() != "" and landDirEntry.get() != "")):
@@ -574,13 +748,11 @@ def checkPlay(mode="none"):
         radioGroup.destroy()
         button3.destroy()
         
-       
-        if Radio_Value0.get () == 2:
-            Single_view(timeSleepVal,allDirEntryVal,bgcolorVal)
+        #Single_view(timeSleepVal,allDirEntryVal,bgcolorVal)
+        if Radio_Value0.get () == 0:
+            Multi_view_rotate_90(timeSleepVal,footerPathVal,bgcolorVal,pathsPrt,pathsLand)
         elif Radio_Value0.get () == 1:
-            Multi_view()
-        elif Radio_Value0.get () == 0:
-            Multi_view_rotate(timeSleepVal,footerPathVal,bgcolorVal,pathsPrt,pathsLand)
+            Multi_view_rotate_270(timeSleepVal,footerPathVal,bgcolorVal,pathsPrt,pathsLand)
         else:
             error.configure(text="Something went wrong while detectig the view mode type")
             error.grid(row=7, column=1)
@@ -619,7 +791,8 @@ timeSleep.grid(row=0, column=1)
 
 
 footerPath = tkinter.Entry(window,width=50)
-footerPath.insert(0, "/home/pi/Desktop/diashow//ragaziana_s.jpg")
+#footerPath.insert(0, "/home/pi/Desktop/diashow//ragaziana_s.jpg")
+footerPath.insert(0, "C:/Users/DotNet/Desktop/diashow/ragaziana_s.jpg")
 footerPath.grid(row=1, column=1)
 
 allDirEntry = tkinter.Entry(window,width=50)
@@ -627,11 +800,14 @@ allDirEntry.insert(0, "")
 allDirEntry.grid(row=2, column=1)
 
 portDirEntry = tkinter.Entry(window,width=50)
-portDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Portrait")
+#portDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Portrait")
+portDirEntry.insert(0, "C:/Users/DotNet/Desktop/diashow/4 Random/Portrait")
 #portDirEntry.grid(row=2, column=1)
 
 landDirEntry = tkinter.Entry(window,width=50)
-landDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Landschaft")
+#landDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Landschaft")
+landDirEntry.insert(0, "C:/Users/DotNet/Desktop/diashow/4 Random/Landschaft")
+
 #landDirEntry.grid(row=3, column=1)
 
 colorEntry = tkinter.Entry(window, width=50)
@@ -666,16 +842,16 @@ Radio_Value0 = tkinter.IntVar ()
 Radio_Value0.set(0)
 #Select view mode
 # =============================================================================
-# choice1 = ttk.Radiobutton(radioGroup, text="Single View", variable = Radio_Value0, value = 2)
+# choice1 = ttk.Radiobutton(radioGroup, text="Single View", variable = Radio_Value0, value = not yet)
 # choice1.configure(state = DISABLED)
 # choice1.grid(row=6, column=0)
-# choice2 = ttk.Radiobutton(radioGroup, text="Multi View", variable = Radio_Value0, value = 1)
+# choice2 = ttk.Radiobutton(radioGroup, text="Multi View", variable = Radio_Value0, value = not yet)
 # choice2.configure(state = DISABLED)
 # choice2.grid(row=6, column=1)
 # =============================================================================
-choice3 = ttk.Radiobutton(radioGroup, text="Multi Rotated -90", variable = Radio_Value0, value = 0)
+choice3 = ttk.Radiobutton(radioGroup, text="Multi Rotated +90", variable = Radio_Value0, value = 0)
 choice3.grid(row=6, column=2)
-choice3 = ttk.Radiobutton(radioGroup, text="Multi Rotated +90", variable = Radio_Value0, value = 3)
+choice3 = ttk.Radiobutton(radioGroup, text="Multi Rotated -90 (270)", variable = Radio_Value0, value = 1)
 choice3.grid(row=6, column=3)
 
 
