@@ -16,7 +16,16 @@ import time
 import sys #used to accept outer arguments when running the file
 
 
+#Creating tk window
+window = Tk(className="Ragaziana Slide Show")
+#window.iconbitmap('/home/pi/image-slider/app.ico')
 
+#getting the screen width and hieight
+scr_w = window.winfo_screenwidth()
+scr_h = window.winfo_screenheight()
+
+#making the tk window size equal to the screen size
+window.geometry("700x280")
 
 #getting list of pictures in directory
 def get_image_paths(input_dir='.'):
@@ -70,7 +79,6 @@ def getPaths(inputDir = '.'):
 def get_img_fit_size(path, scr_w, scr_h, rotate, direction='none'):
     
     print("Path:", path)
-    
     imgsize = ImageTk.PhotoImage(Image.open(path))
 
     # Getting 
@@ -79,17 +87,22 @@ def get_img_fit_size(path, scr_w, scr_h, rotate, direction='none'):
     
     # when the width of the photo is more than it's height and more than screen width
     if img_w > img_h and img_w > scr_w and img_h > scr_h:
-        #determining the image size accouring to the equasion
-        # x * img_w = scr_w, then multiply x by the img_h, 
-        # so in conclusion we multiply the hight by the same number that we have multiplied the x with
         print("Case 1",img_w, img_h, scr_w, scr_h)
-        var = int(img_h*(scr_w/img_w))
+        
+        #determining the image size accouring to the equasion
+        #x = scr_h/img_h
+        #var = int(img_w*x)
+        #use img2.resize((int(scr_h),var), Image.ANTIALIAS)
+        #or 
+        
+        x = scr_w/img_w
+        var = int(img_h*x)
+        
         img1 = Image.open(path)
-        
-        
+                
         #checking rotation if requested or not
         if rotate == False:
-            img2 = img1.resize(((int(scr_w), var)), Image.ANTIALIAS)
+            img2 = img1.resize((int(scr_w), var), Image.ANTIALIAS)
             img = ImageTk.PhotoImage(img2)
         elif rotate == True:
             #setup the direction of the image accourding to the incoimming arguments
@@ -248,27 +261,7 @@ def cal_per_num(percentage, number):
     return percentage
 
 
-#Creating tk window
-window = Tk(className="Ragaziana Slide Show")
-#window.iconbitmap('/home/pi/image-slider/app.ico')
-
-#getting the screen width and hieight
-scr_w = window.winfo_screenwidth()
-scr_h = window.winfo_screenheight()
-
-
-#making the tk window size equal to the screen size
-window.geometry("700x280")
-
-#after play
-
-#changing window background color to black
-#window.configure(bg="black")
-
-
-
-
-    #function to make full screen
+#function to make full screen
 def fullScreen(event):
     val = window.overrideredirect()
     if(str(val) == 'None'):
@@ -280,116 +273,115 @@ def fullScreen(event):
     else:
         print("dam"+str(val))
        
-       
-# Create Button and add some text
-button = Button(window, text = 'Full Screen', command = fullScreen)
-#button.pack(side = "bottom", pady = 2)
 
 #Our global variable, increase it in the global scope, not only inside the functions
 numOfImages = 0
 numOfImagesPort=0 
 numOfImagesLand=0
-   
-# =============================================================================
-# def Single_view(timeSleep,directory,colorEntry):
-#     window.geometry(str(scr_w)+"x"+str(scr_h)+"+0+0")
-#     window.attributes('-fullscreen', True)
-#     
-#     
-#     #directory = allDirEntry.get()
-#     #directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Portrait"
-#     #Get paths
-#     paths = get_image_paths(directory)
-#     #read the image 
-#     #call the function to get the picture object with new size
-#     global numOfImages
-#     
-#     path = paths[numOfImages]
-#     
-#     while(numOfImages<=len(paths)-1):#if total is 5 pictures then 1st loop 0 <= 6-1 ==> 0 <= 5 ,2nd loop 1 <= 5
-#         
-#         path = paths[numOfImages]
-#         numOfImages=numOfImages+1
-#         
-#         if(numOfImages>len(paths)):# if total is 5 pic, 1st loop 0 > 6 /reset the loop
-#             numOfImages=0 
-#         
-#         
-#         #createing canvas and make it equal to the screen width and hight
-#         canvas = Canvas(window,width=scr_w, height=scr_h, bg=bgcolor)
-#         #gird plays the canvas without it the canvas will not work
-#         canvas.grid(row=0,column=0)
-#         
-#         
-#         
-#         img = get_img_fit_size(path, scr_w, scr_h, False)
-#         my_image = canvas.create_image(int(scr_w/2),int(scr_h/2),anchor=CENTER, image=img)
-#         
-#         
-#         #Text View
-#         path_arr = path.split("\\") # split the direcoties of the image path 
-#         f_img = (path_arr[-1]) # get the last index of the array of the path
-#         result = f_img[:-4] # Remve last characters from the image name
-#         description = result
-#     
-#         my_regtangle = canvas.create_rectangle(scr_w/2-250,scr_h/1.15-20,scr_w/2+250,scr_h/1.15+20,fill="black")
-#         
-#         my_message = canvas.create_text(scr_w/2,scr_h/1.15,fill="#fff",font="family",text=description,anchor="center")
-#         window.update()
-#         time.sleep(timeSleep)
-#     
-#     window.mainloop()
-#     
-# def Multi_view():
-#     window.geometry(str(scr_w)+"x"+str(scr_h)+"+0+0")
-#     window.attributes('-fullscreen', True)
-#     
-#     global timeSleep
-#     timeSleep = int(timeSleep.get())
-#     global colorEntry
-#     bgcolor = colorEntry.get()
-#     
-#     #Getting Directory from user input
-#     directory = allDirEntry.get()
-#     #directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Portrait"
-#     #Get paths
-#     paths = get_image_paths(directory)
-#     #read the image 
-#     #call the function to get the picture object with new size
-#     global numOfImages
-#     
-#    
-#     while(numOfImages<=len(paths)-1):
-#         path = paths[numOfImages]
-#         numOfImages=numOfImages+1
-#         
-#         #Reset the while loop
-#         if(numOfImages >= len(paths)):# if total is 5 pic, 1st loop 0 > 6 /reset the loop
-#             numOfImages=0
-#             continue 
-#         path2 = paths[numOfImages]
-#         numOfImages=numOfImages+1
-#             
-#             
-#         
-#         canvas = Canvas(window,width=scr_w/2, height=scr_h, bg=bgcolor)
-#         canvas2 = Canvas(window,width=scr_w/2, height=scr_h, bg=bgcolor)
-#         #gird plays the canvas without it the canvas will not work
-#         canvas.grid(row=0,column=0)
-#         canvas2.grid(row=0, column = 1)
-#         
-#         img = get_img_fit_size(path, scr_w/2, scr_h,False)
-#         img2 = get_img_fit_size(path2, scr_w/2, scr_h,False)
-#         
-#         my_image = canvas.create_image(int(scr_w/4),int(scr_h/2),anchor=CENTER, image=img)
-#         my_image_2 = canvas2.create_image(int(scr_w/4),int(scr_h/2),anchor=CENTER, image=img2)
-#         
-#         window.update()
-#         time.sleep(timeSleep)
-#         
-#     window.mainloop()
-#     
-# =============================================================================
+
+def oldCommented():
+    
+    # =============================================================================
+    # def Single_view(timeSleep,directory,colorEntry):
+    #     window.geometry(str(scr_w)+"x"+str(scr_h)+"+0+0")
+    #     window.attributes('-fullscreen', True)
+    #     
+    #     
+    #     #directory = allDirEntry.get()
+    #     #directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Portrait"
+    #     #Get paths
+    #     paths = get_image_paths(directory)
+    #     #read the image 
+    #     #call the function to get the picture object with new size
+    #     global numOfImages
+    #     
+    #     path = paths[numOfImages]
+    #     
+    #     while(numOfImages<=len(paths)-1):#if total is 5 pictures then 1st loop 0 <= 6-1 ==> 0 <= 5 ,2nd loop 1 <= 5
+    #         
+    #         path = paths[numOfImages]
+    #         numOfImages=numOfImages+1
+    #         
+    #         if(numOfImages>len(paths)):# if total is 5 pic, 1st loop 0 > 6 /reset the loop
+    #             numOfImages=0 
+    #         
+    #         
+    #         #createing canvas and make it equal to the screen width and hight
+    #         canvas = Canvas(window,width=scr_w, height=scr_h, bg=bgcolor)
+    #         #gird plays the canvas without it the canvas will not work
+    #         canvas.grid(row=0,column=0)
+    #         
+    #         
+    #         
+    #         img = get_img_fit_size(path, scr_w, scr_h, False)
+    #         my_image = canvas.create_image(int(scr_w/2),int(scr_h/2),anchor=CENTER, image=img)
+    #         
+    #         
+    #         #Text View
+    #         path_arr = path.split("\\") # split the direcoties of the image path 
+    #         f_img = (path_arr[-1]) # get the last index of the array of the path
+    #         result = f_img[:-4] # Remve last characters from the image name
+    #         description = result
+    #     
+    #         my_regtangle = canvas.create_rectangle(scr_w/2-250,scr_h/1.15-20,scr_w/2+250,scr_h/1.15+20,fill="black")
+    #         
+    #         my_message = canvas.create_text(scr_w/2,scr_h/1.15,fill="#fff",font="family",text=description,anchor="center")
+    #         window.update()
+    #         time.sleep(timeSleep)
+    #     
+    #     window.mainloop()
+    #     
+    # def Multi_view():
+    #     window.geometry(str(scr_w)+"x"+str(scr_h)+"+0+0")
+    #     window.attributes('-fullscreen', True)
+    #     
+    #     global timeSleep
+    #     timeSleep = int(timeSleep.get())
+    #     global colorEntry
+    #     bgcolor = colorEntry.get()
+    #     
+    #     #Getting Directory from user input
+    #     directory = allDirEntry.get()
+    #     #directory = r"C:\Users\DotNet\Desktop\Ragazinana Data reduced\diashow\4 Random\Portrait"
+    #     #Get paths
+    #     paths = get_image_paths(directory)
+    #     #read the image 
+    #     #call the function to get the picture object with new size
+    #     global numOfImages
+    #     
+    #    
+    #     while(numOfImages<=len(paths)-1):
+    #         path = paths[numOfImages]
+    #         numOfImages=numOfImages+1
+    #         
+    #         #Reset the while loop
+    #         if(numOfImages >= len(paths)):# if total is 5 pic, 1st loop 0 > 6 /reset the loop
+    #             numOfImages=0
+    #             continue 
+    #         path2 = paths[numOfImages]
+    #         numOfImages=numOfImages+1
+    #             
+    #             
+    #         
+    #         canvas = Canvas(window,width=scr_w/2, height=scr_h, bg=bgcolor)
+    #         canvas2 = Canvas(window,width=scr_w/2, height=scr_h, bg=bgcolor)
+    #         #gird plays the canvas without it the canvas will not work
+    #         canvas.grid(row=0,column=0)
+    #         canvas2.grid(row=0, column = 1)
+    #         
+    #         img = get_img_fit_size(path, scr_w/2, scr_h,False)
+    #         img2 = get_img_fit_size(path2, scr_w/2, scr_h,False)
+    #         
+    #         my_image = canvas.create_image(int(scr_w/4),int(scr_h/2),anchor=CENTER, image=img)
+    #         my_image_2 = canvas2.create_image(int(scr_w/4),int(scr_h/2),anchor=CENTER, image=img2)
+    #         
+    #         window.update()
+    #         time.sleep(timeSleep)
+    #         
+    #     window.mainloop()
+    #     
+    # =============================================================================
+    pass
     
 def Multi_view_rotate_270(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
     
@@ -446,7 +438,7 @@ def Multi_view_rotate_270(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         #in order to make the picture fit in the rotated state in the half of the screen
         # we make the get_img_fit_size adjust it to us to that size by providing 
         # screen hight  as a width and half of the screen with as a height
-        imgPort = get_img_fit_size(pathPort, scr_h, per_w_imgs_landscape, True, direction)
+        imgPort = get_img_fit_size(pathPort, scr_h, per_w_imgs_portriate, True, direction)
         
         portImgCanvas = canvasPort.create_image(int(scr_w/4.3),int(scr_h/2),anchor=CENTER, image=imgPort)
         canvasPort.move(portImgCanvas, 0, -200)
@@ -472,7 +464,7 @@ def Multi_view_rotate_270(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         
         canvasLand = Canvas(window,width=per_w_imgs_landscape, height=scr_h, bg=bgcolor, highlightthickness=10, highlightbackground=bgcolor)
         canvasLand.grid(row=0, column=2)
-        imgLand = get_img_fit_size(pathLand, scr_h, per_w_imgs_portriate, True,direction)
+        imgLand = get_img_fit_size(pathLand, scr_h, per_w_imgs_landscape, True,direction)
         landImgCanvas = canvasLand.create_image(int(scr_w/4.5),int(scr_h/2),anchor=CENTER, image=imgLand)
         
         canvasLand.move(landImgCanvas, 0, -200)
@@ -509,7 +501,7 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
     #Footer will take 8% of the screen width   
     per_w_footer = cal_per_num(8, scr_w)
     # Footer Image operations
-    canvasFoot = Canvas(window,width=per_w_footer, height=scr_h, bg=bgcolor, highlightthickness=3, highlightbackground=bgcolor)
+    canvasFoot = Canvas(window,width=per_w_footer, height=scr_h, bg=bgcolor, highlightthickness=2, highlightbackground=bgcolor)
     canvasFoot.grid(row=0, column=2)
 
     
@@ -530,27 +522,27 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
             numOfImagesPort=0
             
         # each image will take as following in percentage
-        per_w_imgs_portriate = cal_per_num(42, scr_w)
-        per_w_imgs_landscape= cal_per_num(46, scr_w)
+        per_w_imgs_portriate = cal_per_num(50, scr_w)
+        per_w_imgs_landscape= cal_per_num(42, scr_w)
 
         #Create the canvases
-        canvasPort = Canvas(window,width=per_w_imgs_portriate, height=scr_h, bg=bgcolor, highlightthickness=8, highlightbackground=bgcolor)
+        canvasPort = Canvas(window,width=per_w_imgs_portriate, height=scr_h, bg=bgcolor, highlightthickness=1, highlightbackground=bgcolor)
         
         #gird plays the canvas without it the canvas will not work
-        canvasPort.grid(row=0, column=1)
+        canvasPort.grid(row=0, column=0)
 
-        #in order to make the picture fit in the rotated state in the half of the screen
+       #because the image will be rotated then resized in get_img_fit_size method and user these valus
+       # after it's completly rotated then we give the canvas width and heigt
+        imgPort = get_img_fit_size(pathPort, scr_h, per_w_imgs_portriate, True, direction)
+        
+         #in order to make the picture fit in the rotated state in the half of the screen
         # we make the get_img_fit_size adjust it to us to that size by providing 
         # screen hight  as a width and half of the screen with as a height
-        imgPort = get_img_fit_size(pathPort, scr_h, per_w_imgs_landscape, True, direction)
-        
-        
-        
-        portImgCanvas = canvasPort.create_image(int(scr_w/4.3),int(scr_h/2),anchor=CENTER, image=imgPort)
+        portImgCanvas = canvasPort.create_image(int(scr_w/5),int(scr_h/2),anchor=CENTER, image=imgPort)
         canvasPort.move(portImgCanvas, 0, -200)
         window.update()
         count, x, y = 0, 0 ,0
-        while count < 90:
+        while count < 85:
             y += 0.05
             canvasPort.move(portImgCanvas, x, y)
             time.sleep(0.01)
@@ -570,10 +562,10 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
             numOfImagesLand=0
             
         
-        canvasLand = Canvas(window,width=per_w_imgs_landscape, height=scr_h, bg=bgcolor, highlightthickness=6, highlightbackground=bgcolor)
-        canvasLand.grid(row=0, column=0)
-        imgLand = get_img_fit_size(pathLand, scr_h, per_w_imgs_portriate, True, direction)
-        landImgCanvas = canvasLand.create_image(int(scr_w/4.5),int(scr_h/2),anchor=CENTER, image=imgLand)
+        canvasLand = Canvas(window,width=per_w_imgs_landscape, height=scr_h, bg=bgcolor, highlightthickness=1, highlightbackground=bgcolor)
+        canvasLand.grid(row=0, column=1)
+        imgLand = get_img_fit_size(pathLand, scr_h, per_w_imgs_landscape, True, direction)
+        landImgCanvas = canvasLand.create_image(int(scr_w/5),int(scr_h/2),anchor=CENTER, image=imgLand)
         
         canvasLand.move(landImgCanvas, 0, -200)
         window.update()
@@ -724,8 +716,8 @@ def checkPlay(mode="none"):
     # When the user on Multi folder mode or it recives the mode parameter
     if folderMode.config('relief')[-1] == 'sunken' or mode=="multi":
         #Something is wrong with swapping, accourding to the testing I should replace them
-        pathsPrt = get_image_paths(landDirEntryVal)
-        pathsLand = get_image_paths(portDirEntryVal)
+        pathsPrt = get_image_paths(portDirEntryVal)
+        pathsLand = get_image_paths(landDirEntryVal)
 
     
     
@@ -797,8 +789,8 @@ timeSleep.grid(row=0, column=1)
 
 
 footerPath = tkinter.Entry(window,width=50)
-footerPath.insert(0, "/home/pi/Desktop/diashow//ragaziana_s.jpg")
-#footerPath.insert(0, "C:/Users/DotNet/Desktop/diashow/ragaziana_s.jpg")
+#footerPath.insert(0, "/home/pi/Desktop/diashow//ragaziana_s.jpg")
+footerPath.insert(0, "C:/Users/DotNet/Desktop/diashow/ragaziana_s.jpg")
 footerPath.grid(row=1, column=1)
 
 allDirEntry = tkinter.Entry(window,width=50)
@@ -806,13 +798,13 @@ allDirEntry.insert(0, "")
 allDirEntry.grid(row=2, column=1)
 
 portDirEntry = tkinter.Entry(window,width=50)
-portDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Portrait")
-#portDirEntry.insert(0, "C:/Users/DotNet/Desktop/diashow/4 Random/Portrait")
+#portDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Portrait")
+portDirEntry.insert(0, "C:/Users/DotNet/Desktop/diashow/4 Random/Portrait")
 #portDirEntry.grid(row=2, column=1)
 
 landDirEntry = tkinter.Entry(window,width=50)
-landDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Landschaft")
-#landDirEntry.insert(0, "C:/Users/DotNet/Desktop/diashow/4 Random/Landschaft")
+#landDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Landschaft")
+landDirEntry.insert(0, "C:/Users/DotNet/Desktop/diashow/4 Random/Landschaft")
 
 #landDirEntry.grid(row=3, column=1)
 
