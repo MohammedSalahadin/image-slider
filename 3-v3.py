@@ -397,6 +397,7 @@ def Multi_view_rotate_270(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
     #Creating tk window
     window.attributes('-fullscreen', True)
     window.geometry(str(scr_w)+"x"+str(scr_h)+"+0+0")
+    window.configure(bg=bgcolor)
     
     #Setup the direction of the rotation
     direction = "270"
@@ -474,7 +475,7 @@ def Multi_view_rotate_270(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         imgLand = get_img_fit_size(pathLand, scr_h, per_w_imgs_portriate, True,direction)
         landImgCanvas = canvasLand.create_image(int(scr_w/4.5),int(scr_h/2),anchor=CENTER, image=imgLand)
         
-        canvasLand.move(portImgCanvas, 0, -200)
+        canvasLand.move(landImgCanvas, 0, -200)
         window.update()
         count2, x2, y2 = 0, 0 ,0
         while count2 < 90:
@@ -494,6 +495,7 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         #Creating tk window
     window.attributes('-fullscreen', True)
     window.geometry(str(scr_w)+"x"+str(scr_h)+"+0+0")
+    window.configure(bg=bgcolor)
     
     #direction
     direction = "90"
@@ -507,7 +509,7 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
     #Footer will take 8% of the screen width   
     per_w_footer = cal_per_num(8, scr_w)
     # Footer Image operations
-    canvasFoot = Canvas(window,width=per_w_footer, height=scr_h, bg=bgcolor, highlightthickness=1, highlightbackground=bgcolor)
+    canvasFoot = Canvas(window,width=per_w_footer, height=scr_h, bg=bgcolor, highlightthickness=3, highlightbackground=bgcolor)
     canvasFoot.grid(row=0, column=2)
 
     
@@ -517,6 +519,7 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
     footerImg3 = footerImg2.resize((int(per_w_footer),int(scr_h)), Image.ANTIALIAS)
     footerImg = ImageTk.PhotoImage(footerImg3)
     footer = canvasFoot.create_image(per_w_footer/2,scr_h/2,anchor=CENTER, image=footerImg)
+    
     
     
     while(numOfImagesPort<=len(pathsPrt)-1 or numOfImagesLand<=len(pathsLand)-1 ):
@@ -543,6 +546,10 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         # screen hight  as a width and half of the screen with as a height
         imgPort = get_img_fit_size(pathPort, scr_h, per_w_imgs_landscape, True, direction)
         
+        # Reason of the below code to keep the screen full for the first run
+        canvasLand = Canvas(window,width=per_w_imgs_landscape, height=scr_h, bg=bgcolor, highlightthickness=8, highlightbackground=bgcolor)
+        canvasLand.grid(row=0, column=0)
+        
         portImgCanvas = canvasPort.create_image(int(scr_w/4.3),int(scr_h/2),anchor=CENTER, image=imgPort)
         canvasPort.move(portImgCanvas, 0, -200)
         window.update()
@@ -554,7 +561,9 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
             window.update()
             count += 1
             
-    
+
+        
+        # Brake between the pictures view
         time.sleep(timeSleepVal/2)
         
         # Landscape image 
@@ -565,12 +574,12 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
             numOfImagesLand=0
             
         
-        canvasLand = Canvas(window,width=per_w_imgs_landscape, height=scr_h, bg=bgcolor, highlightthickness=8, highlightbackground=bgcolor)
+        canvasLand = Canvas(window,width=per_w_imgs_landscape, height=scr_h, bg=bgcolor, highlightthickness=6, highlightbackground=bgcolor)
         canvasLand.grid(row=0, column=0)
         imgLand = get_img_fit_size(pathLand, scr_h, per_w_imgs_portriate, True, direction)
         landImgCanvas = canvasLand.create_image(int(scr_w/4.5),int(scr_h/2),anchor=CENTER, image=imgLand)
         
-        canvasLand.move(portImgCanvas, 0, -200)
+        canvasLand.move(landImgCanvas, 0, -200)
         window.update()
         count2, x2, y2 = 0, 0 ,0
         while count2 < 90:
@@ -656,6 +665,7 @@ def choose_color():
     colorEntry.delete(0, 'end')
     colorEntry.insert(0, color_code[1])
     colorEntry.config({"background": colorEntry.get()})
+    
 def toggle():
     globals()
     
@@ -918,6 +928,8 @@ try:
 except:
     pass
 
+# Toggle the mode to be the default view to the program on starup
+toggle()
 
 window.mainloop()
 
