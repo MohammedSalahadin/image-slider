@@ -59,6 +59,7 @@ def imgType(path):
 
 #Create tow lists one for landscape and one for portirate pictures
 def getPaths(inputDir = '.'):
+    
     global errorlabel
     portPaths = []
     landPaths = []
@@ -76,7 +77,9 @@ def getPaths(inputDir = '.'):
                     print("not landscape or portirate")
     return portPaths, landPaths
 
-def get_img_fit_size(path, scr_w, scr_h, rotate, direction='none'):
+
+
+def get_img_fit_size(path, can_w, can_h, rotate, direction='none'):
     
     print("Path:", path)
     imgsize = ImageTk.PhotoImage(Image.open(path))
@@ -84,175 +87,85 @@ def get_img_fit_size(path, scr_w, scr_h, rotate, direction='none'):
     # Getting 
     img_w = imgsize.width()
     img_h = imgsize.height()
+    #After rotation
+    img_w_r = img_h
+    img_h_r = img_w
     
-    # when the width of the photo is more than it's height and more than screen width
-    if img_w > img_h and img_w > scr_w and img_h > scr_h:
-        print("Case 1",img_w, img_h, scr_w, scr_h)
-        
-        #determining the image size accouring to the equasion
-        #x = scr_h/img_h
-        #var = int(img_w*x)
-        #use img2.resize((int(scr_h),var), Image.ANTIALIAS)
-        #or 
-        
-        x = scr_w/img_w
-        var = int(img_h*x)
-        
-        img1 = Image.open(path)
-                
-        #checking rotation if requested or not
-        if rotate == False:
-            img2 = img1.resize((int(scr_w), var), Image.ANTIALIAS)
-            img = ImageTk.PhotoImage(img2)
-        elif rotate == True:
-            #setup the direction of the image accourding to the incoimming arguments
-            if direction == '90':
-                #using transpose function instead of rotate to avoid cropping sides
-                img2 = img1.transpose(Image.ROTATE_90)
-            elif direction == '270':
-                #using transpose function instead of rotate to avoid cropping sides
-                img2 = img1.transpose(Image.ROTATE_270)
-            else:
-                print("wrong argument for direction of rotation")
-                return None
-                
-            #Exchanging hieght with width value positions to make it work correctly
-            img3 = img2.resize((var,int(scr_h)), Image.ANTIALIAS)
-            #Save the result to img
-            img = ImageTk.PhotoImage(img3)
-        else:
-            print("Missing rotate attribute")
-            
-    # When the width of the photo is more than it's height and more than screen width but img height is less than screen height
-    elif img_w > img_h and img_w > scr_w and img_h < scr_h:
-        #determining the image size accouring to the equasion
-        # x * img_w = scr_w, then multiply x by the img_h, 
-        # so in conclusion we multiply the hight by the same number that we have multiplied the x with in oreder to fit the new screen size
-        print("Case 2",img_w, img_h, scr_w, scr_h)
-        x = (scr_h/img_h)
-        var = x * img_w
-        img1 = Image.open(path)
-        
-        
-        #checking rotation if requested or not
-        if rotate == False:
-            img2 = img1.resize((var,int(scr_w)), Image.ANTIALIAS)
-            img = ImageTk.PhotoImage(img2)
-        elif rotate == True:
-             #setup the direction of the image accourding to the incoimming arguments
-            if direction == '90':
-                #using transpose function instead of rotate to avoid cropping sides
-                img2 = img1.transpose(Image.ROTATE_90)
-            elif direction == '270':
-                #using transpose function instead of rotate to avoid cropping sides
-                img2 = img1.transpose(Image.ROTATE_270)
-            else:
-                print("wrong argument for direction of rotation")
-                return None
-            #Exchanging hieght with width value positions to make it work correctly
-            img3 = img2.resize((int(scr_h),var), Image.ANTIALIAS)
-            #Save the result to img
-            img = ImageTk.PhotoImage(img3)
-        else:
-            print("Missing rotate attribute")
+    # Here we resize the rotated image
+    def proccess():
+        # Identify if the image is Landscape, Portirate or square depending on it's original before rotating
 
-    
-    # when the hieght of the image is more than it's width and also more than screen height
-    elif img_h > img_w and img_h > scr_h:
-        print("Case 3")
-        var = int(img_w*(scr_h/img_h))
-        img1 = Image.open(path)
-        
-        
-        #checking rotation if requested or not, if rotation is enabled then roate picture befor resizing
-        if rotate == False:
-            img2 = img1.resize((var, int(scr_h)), Image.ANTIALIAS)
-            img = ImageTk.PhotoImage(img2)
-        elif rotate == True:
-            #setup the direction of the image accourding to the incoimming arguments
-            if direction == '90':
-                #using transpose function instead of rotate to avoid cropping sides
-                img2 = img1.transpose(Image.ROTATE_90)
-            elif direction == '270':
-                #using transpose function instead of rotate to avoid cropping sides
-                img2 = img1.transpose(Image.ROTATE_270)
-            else:
-                print("wrong argument for direction of rotation")
-                return None
-            #Exchanging hieght with width value positions to make it work correctly
-            img3 = img2.resize((int(scr_h),var ), Image.ANTIALIAS)
-            img = ImageTk.PhotoImage(img3)
-        else:
-            print("Missing rotate attribute")
+        # Image is Landscape
+        if img_w > img_h:
+            # Only measure by can_h and img_h_r because it's landscape
+            if img_h_r > can_h:
+                nImg_h = can_h
+                x = can_h/img_h_r
+                nImg_w = x * img_w_r
+                
+            elif img_h_r <= can_h:
+                nImg_h = img_h_r #Original size
+                nImg_w = img_w_r #Original size
+                
             
-    # When the image width is larger than the image height and the image hieght is smaller than screen hieght
-    elif img_w <= scr_w and img_h <= scr_h:
-        print("Case 4")
-        img1 = Image.open(path)
-        img2 = img1.resize((img_w-out, img_h-out), Image.ANTIALIAS)
+        # Image is Portirate
+        elif img_w < img_h:
+            # Only Measure by can_w and img_w_r because it's portirate
+            if img_w_r > can_w:
+                nImg_w = can_w
+                x = can_w/img_w_r
+                nImg_h = x * img_h_r
+                
+            elif img_w_r <= can_w:
+                nImg_w = img_w_r #Original size
+                nImg_h = img_h_r #Original size
+  
+        # Image is Square
+        elif img_w == img_h:
+            # Measuring by can_w and Img_w_r
+            if img_w_r > can_w:
+                nImg_w = can_w
+                x= can_w/img_w_r
+                nImg_h = x * img_h_r
+            elif  img_w_r <= can_w:
+                nImg_w = img_w_r #Original size
+                nImg_h = img_h_r #Original size
+                
+        # Implement the size on the image
+        return int(nImg_w), int(nImg_h)
+###################  End proccing function #################
         
-        #checking rotation if requested or not
-        if rotate == False:
-            img = ImageTk.PhotoImage(img2)
-        elif rotate == True:
-             #setup the direction of the image accourding to the incoimming arguments
-            if direction == '90':
-                #using transpose function instead of rotate to avoid cropping sides
-                img2 = img1.transpose(Image.ROTATE_90)
-            elif direction == '270':
-                #using transpose function instead of rotate to avoid cropping sides
-                img2 = img1.transpose(Image.ROTATE_270)
-            else:
-                print("wrong argument for direction of rotation")
-                return None
-        else:
-            print("Missing rotate attribute")
+        
+    # Get the image from path
+    img1 = Image.open(path)
+    if rotate == True:
+        if direction == '90':
+            #using transpose function instead of rotate to avoid cropping sides
+            img2 = img1.transpose(Image.ROTATE_90)
+            nImg_w, nImg_h = proccess() # Get the new size
+            img3 = img2.resize((nImg_w,nImg_h), Image.ANTIALIAS) #Resizing work
+            img = ImageTk.PhotoImage(img3) # to return
+            print("output width:",nImg_w," Output height:", nImg_h)
+            return img
             
-    # When image width is equal to image height and the image width is bigger than screen width
-    elif img_w == img_h and img_w > scr_w:
-        print("Case 5")
-        img1 = Image.open(path)
-        img2 = img1.resize((scr_w, scr_h), Image.ANTIALIAS)
-        
-        #checking rotation if requested or not
-        if rotate == False:
-            img = ImageTk.PhotoImage(img2)
-        elif rotate == True:
-             #setup the direction of the image accourding to the incoimming arguments
-            if direction == '90':
-                #using transpose function instead of rotate to avoid cropping sides
-                img2 = img1.transpose(Image.ROTATE_90)
-            elif direction == '270':
-                #using transpose function instead of rotate to avoid cropping sides
-                img2 = img1.transpose(Image.ROTATE_270)
-            else:
-                print("wrong argument for direction of rotation")
-                return None
+        elif direction == '270':
+            #using transpose function instead of rotate to avoid cropping sides
+            img2 = img1.transpose(Image.ROTATE_270)
+            nImg_w, nImg_h = proccess() # Get the new size
+            
+            img3 = img2.resize((nImg_w,nImg_h), Image.ANTIALIAS) #Resizing work
+            img = ImageTk.PhotoImage(img3) # to return
+            return img
         else:
-            print("Missing rotate attribute")
-    
+            print("wrong argument for direction of rotation")
+            return None
+            
     else:
-        print("Non of above conditions",img_w, img_h, scr_w, scr_h)
-        img1 = Image.open(path)
-        img2 = img1.resize((img_w-out, img_h-out), Image.ANTIALIAS)
-        
-        #checking rotation if requested or not
-        if rotate == False:
-            img = ImageTk.PhotoImage(img2)
-        elif rotate == True:
-             #setup the direction of the image accourding to the incoimming arguments
-            if direction == '90':
-                #using transpose function instead of rotate to avoid cropping sides
-                img2 = img1.transpose(Image.ROTATE_90)
-            elif direction == '270':
-                #using transpose function instead of rotate to avoid cropping sides
-                img2 = img1.transpose(Image.ROTATE_270)
-            else:
-                print("wrong argument for direction of rotation")
-                return None
-        else:
-            print("Missing rotate attribute")
-    return img
+        print("Not rotated")
+        return None
+    
+    
+    
 
 #function inputs percentage and number and outputs how much is that percentage in the number
 def cal_per_num(percentage, number):
@@ -512,6 +425,11 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
     footerImg = ImageTk.PhotoImage(footerImg3)
     footer = canvasFoot.create_image(per_w_footer/2,scr_h/2,anchor=CENTER, image=footerImg)
     
+    # each image will take as following in percentage
+    per_w_imgs_portriate = cal_per_num(50, scr_w) #outputs pixels of 50% of the provided pixles
+    per_w_imgs_landscape= cal_per_num(42, scr_w) #outputs pixels of 42% of the provided pixles
+    print('per_w_imgs_portriate:',per_w_imgs_portriate, ' per_w_imgs_landscape:',per_w_imgs_landscape)
+    
     while(numOfImagesPort<=len(pathsPrt)-1 or numOfImagesLand<=len(pathsLand)-1 ):
         
         pathPort = pathsPrt[numOfImagesPort]
@@ -521,10 +439,7 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         if(numOfImagesPort >= len(pathsPrt)):# if total is 5 pic, 1st loop 0 > 6 /reset the loop   
             numOfImagesPort=0
             
-        # each image will take as following in percentage
-        per_w_imgs_portriate = cal_per_num(50, scr_w)
-        per_w_imgs_landscape= cal_per_num(42, scr_w)
-
+        
         #Create the canvases
         canvasPort = Canvas(window,width=per_w_imgs_portriate, height=scr_h, bg=bgcolor, highlightthickness=1, highlightbackground=bgcolor)
         
@@ -538,7 +453,7 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
          #in order to make the picture fit in the rotated state in the half of the screen
         # we make the get_img_fit_size adjust it to us to that size by providing 
         # screen hight  as a width and half of the screen with as a height
-        portImgCanvas = canvasPort.create_image(int(scr_w/5),int(scr_h/2),anchor=CENTER, image=imgPort)
+        portImgCanvas = canvasPort.create_image(int(scr_w/4.5),int(scr_h/2),anchor=CENTER, image=imgPort)
         canvasPort.move(portImgCanvas, 0, -200)
         window.update()
         count, x, y = 0, 0 ,0
@@ -560,17 +475,21 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         
         if(numOfImagesLand >= len(pathsLand)):
             numOfImagesLand=0
-            
         
-        canvasLand = Canvas(window,width=per_w_imgs_landscape, height=scr_h, bg=bgcolor, highlightthickness=1, highlightbackground=bgcolor)
+        #defining canvas width and height
+        can_w = per_w_imgs_landscape
+        can_h = scr_h
+        
+        
+        canvasLand = Canvas(window,width=can_w, height=can_h, bg=bgcolor, highlightthickness=1, highlightbackground=bgcolor)
         canvasLand.grid(row=0, column=1)
-        imgLand = get_img_fit_size(pathLand, scr_h, per_w_imgs_landscape, True, direction)
+        imgLand = get_img_fit_size(pathLand, can_w, can_h, True, direction)
         landImgCanvas = canvasLand.create_image(int(scr_w/5),int(scr_h/2),anchor=CENTER, image=imgLand)
         
         canvasLand.move(landImgCanvas, 0, -200)
         window.update()
         count2, x2, y2 = 0, 0 ,0
-        while count2 < 90:
+        while count2 < 85:
             y2 += 0.05
             canvasLand.move(landImgCanvas, x2, y2)
             time.sleep(0.01)
