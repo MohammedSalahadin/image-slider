@@ -80,7 +80,8 @@ def getPaths(inputDir = '.'):
 
 
 def get_img_fit_size(path, can_w, can_h, rotate, direction='none'):
-    
+    can_w = can_w -40;
+    can_h = can_h -40;
     print("Path:", path)
     imgsize = ImageTk.PhotoImage(Image.open(path))
 
@@ -103,6 +104,8 @@ def get_img_fit_size(path, can_w, can_h, rotate, direction='none'):
                 x = can_h/img_h_r
                 nImg_w = x * img_w_r
                 
+               
+                    
             elif img_h_r <= can_h:
                 nImg_h = img_h_r #Original size
                 nImg_w = img_w_r #Original size
@@ -439,33 +442,35 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         if(numOfImagesPort >= len(pathsPrt)):# if total is 5 pic, 1st loop 0 > 6 /reset the loop   
             numOfImagesPort=0
             
+        can_w_l = per_w_imgs_portriate
+        can_h_l = scr_h
         
-        #Create the canvases
-        canvasPort = Canvas(window,width=per_w_imgs_portriate, height=scr_h, bg=bgcolor, highlightthickness=1, highlightbackground=bgcolor)
+        # Create the canvases
+        canvasPort = Canvas(window,width=can_w_l, height=can_h_l, bg=bgcolor, highlightthickness=1, highlightbackground=bgcolor)
         
-        #gird plays the canvas without it the canvas will not work
+        # Gird plays the canvas without it the canvas will not work
         canvasPort.grid(row=0, column=0)
-
-       #because the image will be rotated then resized in get_img_fit_size method and user these valus
-       # after it's completly rotated then we give the canvas width and heigt
-        imgPort = get_img_fit_size(pathPort, scr_h, per_w_imgs_portriate, True, direction)
         
-         #in order to make the picture fit in the rotated state in the half of the screen
+        
+
+        # Because the image will be rotated then resized in get_img_fit_size method and user these valus
+        # After it's completly rotated then we give the canvas width and heigt
+        imgPort = get_img_fit_size(pathPort, can_w_l, can_h_l, True, direction)
+        
+        # In order to make the picture fit in the rotated state in the half of the screen
         # we make the get_img_fit_size adjust it to us to that size by providing 
         # screen hight  as a width and half of the screen with as a height
-        portImgCanvas = canvasPort.create_image(int(scr_w/4.5),int(scr_h/2),anchor=CENTER, image=imgPort)
+        portImgCanvas = canvasPort.create_image(int(scr_w/4.2),int(scr_h/2),anchor=CENTER, image=imgPort)
         canvasPort.move(portImgCanvas, 0, -200)
         window.update()
         count, x, y = 0, 0 ,0
-        while count < 85:
+        while count < 88:
             y += 0.05
             canvasPort.move(portImgCanvas, x, y)
             time.sleep(0.01)
             window.update()
             count += 1
-            
-
-        
+                    
         # Brake between the pictures view
         time.sleep(timeSleepVal/2)
         
@@ -477,19 +482,18 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
             numOfImagesLand=0
         
         #defining canvas width and height
-        can_w = per_w_imgs_landscape
-        can_h = scr_h
+        can_w_l = per_w_imgs_landscape
+        can_h_l = scr_h
         
-        
-        canvasLand = Canvas(window,width=can_w, height=can_h, bg=bgcolor, highlightthickness=1, highlightbackground=bgcolor)
+        canvasLand = Canvas(window,width=can_w_l, height=can_h_l, bg=bgcolor, highlightthickness=1, highlightbackground=bgcolor)
         canvasLand.grid(row=0, column=1)
-        imgLand = get_img_fit_size(pathLand, can_w, can_h, True, direction)
+        imgLand = get_img_fit_size(pathLand, can_w_l, can_h_l, True, direction)
         landImgCanvas = canvasLand.create_image(int(scr_w/5),int(scr_h/2),anchor=CENTER, image=imgLand)
         
         canvasLand.move(landImgCanvas, 0, -200)
         window.update()
         count2, x2, y2 = 0, 0 ,0
-        while count2 < 85:
+        while count2 < 88:
             y2 += 0.05
             canvasLand.move(landImgCanvas, x2, y2)
             time.sleep(0.01)
