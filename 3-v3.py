@@ -706,7 +706,7 @@ L4 = Label(window, text="Background color")
 L4.grid(row=5, column=0,pady=5, padx=20)
 
 timeSleep = tkinter.Entry(window)
-timeSleep.insert(0, "10")
+timeSleep.insert(0, "5")
 #timeSleep.insert(0, "1")
 timeSleep.grid(row=0, column=1)
 
