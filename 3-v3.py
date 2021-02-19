@@ -483,6 +483,8 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         can_w_l = per_w_imgs_landscape
         can_h_l = scr_h
         
+        
+        
         canvasLand = Canvas(window,width=can_w_l, height=can_h_l, bg=bgcolor, highlightthickness=1, highlightbackground=bgcolor)
         canvasLand.grid(row=0, column=1)
         imgLand = get_img_fit_size(pathLand, can_w_l, can_h_l, True, direction)
@@ -491,7 +493,7 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         canvasLand.move(landImgCanvas, 0, -200)
         window.update()
         count2, x2, y2 = 0, 0 ,0
-        while count2 < 90:
+        while count2 < 88:
             y2 += 0.05
             canvasLand.move(landImgCanvas, x2, y2)
             time.sleep(0.01)
@@ -710,8 +712,8 @@ timeSleep.grid(row=0, column=1)
 
 
 footerPath = tkinter.Entry(window,width=50)
-#footerPath.insert(0, "/home/pi/Desktop/diashow//ragaziana_s.jpg")
-footerPath.insert(0, "C:/Users/DotNet/Desktop/diashow/ragaziana_s.jpg")
+footerPath.insert(0, "/home/pi/Desktop/diashow//ragaziana_s.jpg")
+#footerPath.insert(0, "C:/Users/DotNet/Desktop/diashow/ragaziana_s.jpg")
 footerPath.grid(row=1, column=1)
 
 allDirEntry = tkinter.Entry(window,width=50)
@@ -719,13 +721,13 @@ allDirEntry.insert(0, "")
 allDirEntry.grid(row=2, column=1)
 
 portDirEntry = tkinter.Entry(window,width=50)
-#portDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Portrait")
-portDirEntry.insert(0, "C:/Users/DotNet/Desktop/diashow/4 Random/Portrait")
+portDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Portrait")
+#portDirEntry.insert(0, "C:/Users/DotNet/Desktop/diashow/4 Random/Portrait")
 #portDirEntry.grid(row=2, column=1)
 
 landDirEntry = tkinter.Entry(window,width=50)
-#landDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Landschaft")
-landDirEntry.insert(0, "C:/Users/DotNet/Desktop/diashow/4 Random/Landschaft")
+landDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Landschaft")
+#landDirEntry.insert(0, "C:/Users/DotNet/Desktop/diashow/4 Random/Landschaft")
 
 #landDirEntry.grid(row=3, column=1)
 
