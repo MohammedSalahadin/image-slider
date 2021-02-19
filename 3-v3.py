@@ -15,7 +15,7 @@ from os import path
 import time
 import sys #used to accept outer arguments when running the file
 
-
+#yup
 #Creating tk window
 window = Tk(className="Ragaziana Slide Show")
 #window.iconbitmap('/home/pi/image-slider/app.ico')
