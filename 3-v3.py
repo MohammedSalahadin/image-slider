@@ -103,6 +103,11 @@ def get_img_fit_size(path, can_w, can_h, rotate, direction='none'):
                 nImg_h = can_h
                 x = can_h/img_h_r
                 nImg_w = x * img_w_r
+                #Some pictures loses the buttom so we resize them accourding to their width again
+                if nImg_w > can_w:
+                    nImg_w = can_w
+                    x = can_w/img_w_r
+                    nImg_h = x * img_h_r
                 
             elif img_h_r <= can_h:
                 nImg_h = img_h_r #Original size
@@ -415,7 +420,7 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
     #Footer will take 8% of the screen width   
     per_w_footer = cal_per_num(8, scr_w)
     # Footer Image operations
-    canvasFoot = Canvas(window,width=per_w_footer, height=scr_h, bg=bgcolor, highlightthickness=2, highlightbackground=bgcolor)
+    canvasFoot = Canvas(window,width=per_w_footer, height=scr_h, bg=bgcolor, highlightthickness=0, highlightbackground=bgcolor)
     canvasFoot.grid(row=0, column=2)
 
     
@@ -444,7 +449,7 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         can_h_l = scr_h
         
         # Create the canvases
-        canvasPort = Canvas(window,width=can_w_l, height=can_h_l, bg=bgcolor, highlightthickness=1, highlightbackground=bgcolor)
+        canvasPort = Canvas(window,width=can_w_l, height=can_h_l, bg=bgcolor, highlightthickness=0, highlightbackground=bgcolor)
         
         # Gird plays the canvas without it the canvas will not work
         canvasPort.grid(row=0, column=0)
@@ -484,11 +489,16 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         can_h_l = scr_h
         
         
-        
-        canvasLand = Canvas(window,width=can_w_l, height=can_h_l, bg=bgcolor, highlightthickness=1, highlightbackground=bgcolor)
+       
+        canvasLand = Canvas(window,width=can_w_l, height=can_h_l, bg=bgcolor, highlightthickness=0, highlightbackground=bgcolor)
         canvasLand.grid(row=0, column=1)
         imgLand = get_img_fit_size(pathLand, can_w_l, can_h_l, True, direction)
         landImgCanvas = canvasLand.create_image(0,0,anchor=NW, image=imgLand)
+        
+        print("###########################################################")
+        print('can_w_l:',can_w_l,' can_h_l:',can_h_l)
+        print('Img_width:', imgLand.width(), 'img_height:',imgLand.height())
+        print("###########################################################")
         
         canvasLand.move(landImgCanvas, 0, -200)
         window.update()
