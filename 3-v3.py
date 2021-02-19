@@ -462,7 +462,7 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         canvasPort.move(portImgCanvas, 0, -200)
         window.update()
         count, x, y = 0, 0 ,0
-        while count < 88:
+        while count < 120:
             y += 0.05
             canvasPort.move(portImgCanvas, x, y)
             time.sleep(0.01)
@@ -491,7 +491,7 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         canvasLand.move(landImgCanvas, 0, -200)
         window.update()
         count2, x2, y2 = 0, 0 ,0
-        while count2 < 88:
+        while count2 < 90:
             y2 += 0.05
             canvasLand.move(landImgCanvas, x2, y2)
             time.sleep(0.01)
