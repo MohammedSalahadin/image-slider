@@ -458,11 +458,11 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         # In order to make the picture fit in the rotated state in the half of the screen
         # we make the get_img_fit_size adjust it to us to that size by providing 
         # screen hight  as a width and half of the screen with as a height
-        portImgCanvas = canvasPort.create_image(0,0,anchor=NW, image=imgPort)
+        portImgCanvas = canvasPort.create_image(int(scr_w/4.3),int(scr_h/2),anchor=CENTER, image=imgPort)
         canvasPort.move(portImgCanvas, 0, -200)
         window.update()
         count, x, y = 0, 0 ,0
-        while count < 120:
+        while count < 90:
             y += 0.05
             canvasPort.move(portImgCanvas, x, y)
             time.sleep(0.01)
@@ -493,7 +493,7 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         canvasLand.move(landImgCanvas, 0, -200)
         window.update()
         count2, x2, y2 = 0, 0 ,0
-        while count2 < 88:
+        while count2 < 95:
             y2 += 0.05
             canvasLand.move(landImgCanvas, x2, y2)
             time.sleep(0.01)
@@ -706,14 +706,15 @@ L4 = Label(window, text="Background color")
 L4.grid(row=5, column=0,pady=5, padx=20)
 
 timeSleep = tkinter.Entry(window)
-timeSleep.insert(0, "10")
+#timeSleep.insert(0, "10")
+timeSleep.insert(0, "1")
 timeSleep.grid(row=0, column=1)
 
 
 
 footerPath = tkinter.Entry(window,width=50)
-footerPath.insert(0, "/home/pi/Desktop/diashow//ragaziana_s.jpg")
-#footerPath.insert(0, "C:/Users/DotNet/Desktop/diashow/ragaziana_s.jpg")
+#footerPath.insert(0, "/home/pi/Desktop/diashow//ragaziana_s.jpg")
+footerPath.insert(0, "C:/Users/DotNet/Desktop/diashow/ragaziana_s.jpg")
 footerPath.grid(row=1, column=1)
 
 allDirEntry = tkinter.Entry(window,width=50)
@@ -721,13 +722,13 @@ allDirEntry.insert(0, "")
 allDirEntry.grid(row=2, column=1)
 
 portDirEntry = tkinter.Entry(window,width=50)
-portDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Portrait")
-#portDirEntry.insert(0, "C:/Users/DotNet/Desktop/diashow/4 Random/Portrait")
+#portDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Portrait")
+portDirEntry.insert(0, "C:/Users/DotNet/Desktop/diashow/4 Random/Portrait")
 #portDirEntry.grid(row=2, column=1)
 
 landDirEntry = tkinter.Entry(window,width=50)
-landDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Landschaft")
-#landDirEntry.insert(0, "C:/Users/DotNet/Desktop/diashow/4 Random/Landschaft")
+#landDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Landschaft")
+landDirEntry.insert(0, "C:/Users/DotNet/Desktop/diashow/4 Random/Landschaft")
 
 #landDirEntry.grid(row=3, column=1)
 
