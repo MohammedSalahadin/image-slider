@@ -305,14 +305,14 @@ def oldCommented():
 def Multi_view_rotate_270(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
     
     print("-90 (270) view");
+    
     #Creating tk window
     window.attributes('-fullscreen', True)
     window.geometry(str(scr_w)+"x"+str(scr_h)+"+0+0")
     window.configure(bg=bgcolor)
     
-    #Setup the direction of the rotation
+    #direction
     direction = "270"
-
     #read the image 
     #call the function to get the picture object with new size
     global numOfImagesPort
@@ -323,7 +323,7 @@ def Multi_view_rotate_270(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
     #Footer will take 8% of the screen width   
     per_w_footer = cal_per_num(8, scr_w)
     # Footer Image operations
-    canvasFoot = Canvas(window,width=per_w_footer, height=scr_h, bg=bgcolor, highlightthickness=1, highlightbackground=bgcolor)
+    canvasFoot = Canvas(window,width=per_w_footer, height=scr_h, bg=bgcolor, highlightthickness=0, highlightbackground=bgcolor)
     canvasFoot.grid(row=0, column=0)
 
     
@@ -334,6 +334,10 @@ def Multi_view_rotate_270(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
     footerImg = ImageTk.PhotoImage(footerImg3)
     footer = canvasFoot.create_image(per_w_footer/2,scr_h/2,anchor=CENTER, image=footerImg)
     
+    # each image will take as following in percentage
+    per_w_imgs_portriate = cal_per_num(50, scr_w) #outputs pixels of 50% of the provided pixles
+    per_w_imgs_landscape= cal_per_num(42, scr_w) #outputs pixels of 42% of the provided pixles
+    print('per_w_imgs_portriate:',per_w_imgs_portriate, ' per_w_imgs_landscape:',per_w_imgs_landscape)
     
     while(numOfImagesPort<=len(pathsPrt)-1 or numOfImagesLand<=len(pathsLand)-1 ):
         
@@ -344,21 +348,24 @@ def Multi_view_rotate_270(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         if(numOfImagesPort >= len(pathsPrt)):# if total is 5 pic, 1st loop 0 > 6 /reset the loop   
             numOfImagesPort=0
             
-        # each image will take as following in percentage
-        per_w_imgs_portriate = cal_per_num(42, scr_w)
-        per_w_imgs_landscape= cal_per_num(50, scr_w)
-
-        #Create the canvases
-        canvasPort = Canvas(window,width=per_w_imgs_portriate, height=scr_h, bg=bgcolor, highlightthickness=10, highlightbackground=bgcolor)
+        can_w_l = per_w_imgs_portriate
+        can_h_l = scr_h
         
-        #gird plays the canvas without it the canvas will not work
-        canvasPort.grid(row=0, column=1)
+        # Create the canvases
+        canvasPort = Canvas(window,width=can_w_l, height=can_h_l, bg=bgcolor, highlightthickness=0, highlightbackground=bgcolor)
+        
+        # Gird plays the canvas without it the canvas will not work
+        canvasPort.grid(row=0, column=2)
+        
+        
 
-        #in order to make the picture fit in the rotated state in the half of the screen
+        # Because the image will be rotated then resized in get_img_fit_size method and user these valus
+        # After it's completly rotated then we give the canvas width and heigt
+        imgPort = get_img_fit_size(pathPort, can_w_l, can_h_l, True, direction)
+        
+        # In order to make the picture fit in the rotated state in the half of the screen
         # we make the get_img_fit_size adjust it to us to that size by providing 
         # screen hight  as a width and half of the screen with as a height
-        imgPort = get_img_fit_size(pathPort, scr_h, per_w_imgs_portriate, True, direction)
-        
         portImgCanvas = canvasPort.create_image(int(scr_w/4.3),int(scr_h/2),anchor=CENTER, image=imgPort)
         canvasPort.move(portImgCanvas, 0, -200)
         window.update()
@@ -369,8 +376,8 @@ def Multi_view_rotate_270(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
             time.sleep(0.01)
             window.update()
             count += 1
-            
-    
+                    
+        # Brake between the pictures view
         time.sleep(timeSleepVal/2)
         
         # Landscape image 
@@ -379,17 +386,27 @@ def Multi_view_rotate_270(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         
         if(numOfImagesLand >= len(pathsLand)):
             numOfImagesLand=0
-            
         
-        canvasLand = Canvas(window,width=per_w_imgs_landscape, height=scr_h, bg=bgcolor, highlightthickness=10, highlightbackground=bgcolor)
-        canvasLand.grid(row=0, column=2)
-        imgLand = get_img_fit_size(pathLand, scr_h, per_w_imgs_landscape, True,direction)
-        landImgCanvas = canvasLand.create_image(int(scr_w/4.5),int(scr_h/2),anchor=CENTER, image=imgLand)
+        #defining canvas width and height
+        can_w_l = per_w_imgs_landscape
+        can_h_l = scr_h
+        
+        
+       
+        canvasLand = Canvas(window,width=can_w_l, height=can_h_l, bg=bgcolor, highlightthickness=0, highlightbackground=bgcolor)
+        canvasLand.grid(row=0, column=1)
+        imgLand = get_img_fit_size(pathLand, can_w_l, can_h_l, True, direction)
+        landImgCanvas = canvasLand.create_image(0,0,anchor=NW, image=imgLand)
+        
+        print("###########################################################")
+        print('can_w_l:',can_w_l,' can_h_l:',can_h_l)
+        print('Img_width:', imgLand.width(), 'img_height:',imgLand.height())
+        print("###########################################################")
         
         canvasLand.move(landImgCanvas, 0, -200)
         window.update()
         count2, x2, y2 = 0, 0 ,0
-        while count2 < 90:
+        while count2 < 95:
             y2 += 0.05
             canvasLand.move(landImgCanvas, x2, y2)
             time.sleep(0.01)
