@@ -775,15 +775,15 @@ L5 = Label(window, text="Decrase Percentage")
 L5.grid(row=6, column=0,pady=5, padx=20)
 
 timeSleep = tkinter.Entry(window)
-timeSleep.insert(0, "5")
-#timeSleep.insert(0, "1")
+#timeSleep.insert(0, "5")
+timeSleep.insert(0, "1")
 timeSleep.grid(row=0, column=1)
 
 
 
 footerPath = tkinter.Entry(window,width=50)
-#footerPath.insert(0, "/home/pi/Desktop/diashow//ragaziana_s.jpg")
-footerPath.insert(0, "C:/Users/DotNet/Desktop/diashow/ragaziana_s.jpg")
+footerPath.insert(0, "/home/pi/Desktop/diashow//ragaziana_s.jpg")
+#footerPath.insert(0, "C:/Users/DotNet/Desktop/diashow/ragaziana_s.jpg")
 footerPath.grid(row=1, column=1)
 
 allDirEntry = tkinter.Entry(window,width=50)
@@ -791,13 +791,13 @@ allDirEntry.insert(0, "")
 allDirEntry.grid(row=2, column=1)
 
 portDirEntry = tkinter.Entry(window,width=50)
-#portDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Portrait")
-portDirEntry.insert(0, "C:/Users/DotNet/Desktop/diashow/4 Random/Portrait")
+portDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Portrait")
+#portDirEntry.insert(0, "C:/Users/DotNet/Desktop/diashow/4 Random/Portrait")
 #portDirEntry.grid(row=2, column=1)
 
 landDirEntry = tkinter.Entry(window,width=50)
-#landDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Landschaft")
-landDirEntry.insert(0, "C:/Users/DotNet/Desktop/diashow/4 Random/Landschaft")
+landDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Landschaft")
+#landDirEntry.insert(0, "C:/Users/DotNet/Desktop/diashow/4 Random/Landschaft")
 
 #landDirEntry.grid(row=3, column=1)
 
@@ -808,6 +808,7 @@ colorEntry.grid(row=5, column=1)
 #Decrase the view by percentage
 percentageEntry = tkinter.Entry(window, width=50)
 percentageEntry.insert(0, "10")
+#percentageEntry.insert(0, "0")
 percentageEntry.grid(row=6, column=1)
 
 select_btn = Button(window,text="Select file",width=10,command=insert)
