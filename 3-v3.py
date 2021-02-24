@@ -301,8 +301,19 @@ def oldCommented():
     #     
     # =============================================================================
     pass
+
+#this function for decreasing the images size by percentage
+def final_persent(percentage, res_percentage):
+    p = res_percentage/100
+    result = p * percentage
+    return percentage-result
+
+
+
+
+
     
-def Multi_view_rotate_270(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
+def Multi_view_rotate_270(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand,resize_persent):
     
     print("-90 (270) view");
     
@@ -321,7 +332,7 @@ def Multi_view_rotate_270(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
     #footerPath = "C:/Users/DotNet/Desktop/Ragazinana Data reduced/diashow/ragaziana_s.jpg"
     
     #Footer will take 8% of the screen width   
-    per_w_footer = cal_per_num(8, scr_w)
+    per_w_footer = cal_per_num(final_persent(8,resize_persent), scr_w)
     # Footer Image operations
     canvasFoot = Canvas(window,width=per_w_footer, height=scr_h, bg=bgcolor, highlightthickness=0, highlightbackground=bgcolor)
     canvasFoot.grid(row=0, column=0)
@@ -334,9 +345,10 @@ def Multi_view_rotate_270(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
     footerImg = ImageTk.PhotoImage(footerImg3)
     footer = canvasFoot.create_image(per_w_footer/2,scr_h/2,anchor=CENTER, image=footerImg)
     
+
     # each image will take as following in percentage
-    per_w_imgs_portriate = cal_per_num(50, scr_w) #outputs pixels of 50% of the provided pixles
-    per_w_imgs_landscape= cal_per_num(42, scr_w) #outputs pixels of 42% of the provided pixles
+    per_w_imgs_portriate = cal_per_num(final_persent(50,resize_persent), scr_w) #outputs pixels of 50% of the provided pixles
+    per_w_imgs_landscape= cal_per_num(final_persent(42,resize_persent), scr_w) #outputs pixels of 42% of the provided pixles
     print('per_w_imgs_portriate:',per_w_imgs_portriate, ' per_w_imgs_landscape:',per_w_imgs_landscape)
     
     while(numOfImagesPort<=len(pathsPrt)-1 or numOfImagesLand<=len(pathsLand)-1 ):
@@ -396,7 +408,7 @@ def Multi_view_rotate_270(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         canvasLand = Canvas(window,width=can_w_l, height=can_h_l, bg=bgcolor, highlightthickness=0, highlightbackground=bgcolor)
         canvasLand.grid(row=0, column=1)
         imgLand = get_img_fit_size(pathLand, can_w_l, can_h_l, True, direction)
-        landImgCanvas = canvasLand.create_image(0,0,anchor=NW, image=imgLand)
+        landImgCanvas = canvasLand.create_image(int(scr_w/4.3),int(scr_h/2), image=imgLand)
         
         print("###########################################################")
         print('can_w_l:',can_w_l,' can_h_l:',can_h_l)
@@ -406,7 +418,7 @@ def Multi_view_rotate_270(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         canvasLand.move(landImgCanvas, 0, -200)
         window.update()
         count2, x2, y2 = 0, 0 ,0
-        while count2 < 95:
+        while count2 < 100-resize_persent:
             y2 += 0.05
             canvasLand.move(landImgCanvas, x2, y2)
             time.sleep(0.01)
@@ -418,11 +430,27 @@ def Multi_view_rotate_270(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         
     window.mainloop()
 
-def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
+#This function inputs the percentage and the original pixels amount to decrase the pixels depending on
+# The provided percentage
+def decrease(percentage, original):
+    final = ((percentage * original)-(100*original))/-100
+    return int(final)
+    
+    
+
+
+def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand,resize_persent):
+    
+    
+    #print(decrease(resize_persent,scr_h_decreased))
+    
+    scr_w_decreased = decrease(resize_persent,scr_w)
+    scr_h_decreased = decrease(resize_persent,scr_h)
+    
     print("90 View")
         #Creating tk window
     window.attributes('-fullscreen', True)
-    window.geometry(str(scr_w)+"x"+str(scr_h)+"+0+0")
+    window.geometry(str(scr_w_decreased)+"x"+str(scr_h_decreased)+"+0+0")
     window.configure(bg=bgcolor)
     
     #direction
@@ -435,22 +463,22 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
     #footerPath = "C:/Users/DotNet/Desktop/Ragazinana Data reduced/diashow/ragaziana_s.jpg"
     
     #Footer will take 8% of the screen width   
-    per_w_footer = cal_per_num(8, scr_w)
+    per_w_footer = cal_per_num(final_persent(8,resize_persent), scr_w_decreased)
     # Footer Image operations
-    canvasFoot = Canvas(window,width=per_w_footer, height=scr_h, bg=bgcolor, highlightthickness=0, highlightbackground=bgcolor)
+    canvasFoot = Canvas(window,width=per_w_footer, height=scr_h_decreased, bg=bgcolor, highlightthickness=0, highlightbackground=bgcolor)
     canvasFoot.grid(row=0, column=2)
 
     
-    #footerImg = get_img_fit_size(footerPath, scr_h, per_w_footer, True)
+    #footerImg = get_img_fit_size(footerPath, scr_h_decreased, per_w_footer, True)
     footerImg1 = Image.open(footerPath)
     footerImg2 = footerImg1.transpose(Image.ROTATE_90)
-    footerImg3 = footerImg2.resize((int(per_w_footer),int(scr_h)), Image.ANTIALIAS)
+    footerImg3 = footerImg2.resize((int(per_w_footer),int(scr_h_decreased)), Image.ANTIALIAS)
     footerImg = ImageTk.PhotoImage(footerImg3)
-    footer = canvasFoot.create_image(per_w_footer/2,scr_h/2,anchor=CENTER, image=footerImg)
+    footer = canvasFoot.create_image(per_w_footer/2,scr_h_decreased/2,anchor=CENTER, image=footerImg)
     
     # each image will take as following in percentage
-    per_w_imgs_portriate = cal_per_num(50, scr_w) #outputs pixels of 50% of the provided pixles
-    per_w_imgs_landscape= cal_per_num(42, scr_w) #outputs pixels of 42% of the provided pixles
+    per_w_imgs_portriate = cal_per_num(final_persent(50,resize_persent), scr_w_decreased) #outputs pixels of 50% of the provided pixles
+    per_w_imgs_landscape= cal_per_num(final_persent(42,resize_persent), scr_w_decreased) #outputs pixels of 42% of the provided pixles
     print('per_w_imgs_portriate:',per_w_imgs_portriate, ' per_w_imgs_landscape:',per_w_imgs_landscape)
     
     while(numOfImagesPort<=len(pathsPrt)-1 or numOfImagesLand<=len(pathsLand)-1 ):
@@ -463,7 +491,7 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
             numOfImagesPort=0
             
         can_w_l = per_w_imgs_portriate
-        can_h_l = scr_h
+        can_h_l = scr_h_decreased
         
         # Create the canvases
         canvasPort = Canvas(window,width=can_w_l, height=can_h_l, bg=bgcolor, highlightthickness=0, highlightbackground=bgcolor)
@@ -480,7 +508,7 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         # In order to make the picture fit in the rotated state in the half of the screen
         # we make the get_img_fit_size adjust it to us to that size by providing 
         # screen hight  as a width and half of the screen with as a height
-        portImgCanvas = canvasPort.create_image(int(scr_w/4.3),int(scr_h/2),anchor=CENTER, image=imgPort)
+        portImgCanvas = canvasPort.create_image(int(scr_w_decreased/4.3),int(scr_h_decreased/2),anchor=CENTER, image=imgPort)
         canvasPort.move(portImgCanvas, 0, -200)
         window.update()
         count, x, y = 0, 0 ,0
@@ -503,7 +531,7 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         
         #defining canvas width and height
         can_w_l = per_w_imgs_landscape
-        can_h_l = scr_h
+        can_h_l = scr_h_decreased
         
         
        
@@ -520,7 +548,7 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand):
         canvasLand.move(landImgCanvas, 0, -200)
         window.update()
         count2, x2, y2 = 0, 0 ,0
-        while count2 < 95:
+        while count2 < 96:
             y2 += 0.05
             canvasLand.move(landImgCanvas, x2, y2)
             time.sleep(0.01)
@@ -656,6 +684,7 @@ def checkPlay(mode="none"):
     allDirEntryVal = allDirEntry.get() #getting folder path from input
     portDirEntryVal = portDirEntry.get() #getting folder path from input
     landDirEntryVal = landDirEntry.get() #getting folder path from input
+    percentageEntryVal = int(percentageEntry.get()) # Getting the percentage to decrase the screen size
     
     #When the user on single folder mode
     if folderMode.config('relief')[-1] == 'raised' and mode=="none":
@@ -686,11 +715,21 @@ def checkPlay(mode="none"):
         L1.destroy()
         L2.destroy()
         L3.destroy()
+        L3Port.destroy()
+        L3Land.destroy()
         L4.destroy()
+        L5.destroy()
         timeSleep.destroy()
         footerPath.destroy()
         colorEntry.destroy()
+        percentageEntry.destroy()
         select_btn.destroy()
+        port_btn.destroy()
+        land_btn.destroy()
+        folderMode.destroy()
+        portDirEntry.destroy()
+        landDirEntry.destroy()
+        percentageEntry.destroy()
         all_btn.destroy()
         colorButton.destroy()
         radioGroup.destroy()
@@ -698,9 +737,9 @@ def checkPlay(mode="none"):
         
         #Single_view(timeSleepVal,allDirEntryVal,bgcolorVal)
         if Radio_Value0.get () == 0:
-            Multi_view_rotate_90(timeSleepVal,footerPathVal,bgcolorVal,pathsPrt,pathsLand)
+            Multi_view_rotate_90(timeSleepVal,footerPathVal,bgcolorVal,pathsPrt,pathsLand,percentageEntryVal)
         elif Radio_Value0.get () == 1:
-            Multi_view_rotate_270(timeSleepVal,footerPathVal,bgcolorVal,pathsPrt,pathsLand)
+            Multi_view_rotate_270(timeSleepVal,footerPathVal,bgcolorVal,pathsPrt,pathsLand,percentageEntryVal)
         else:
             error.configure(text="Something went wrong while detectig the view mode type")
             error.grid(row=7, column=1)
@@ -725,12 +764,14 @@ L3.grid(row=2, column=0,pady=5, padx=20)
 L3Port = Label(window, text="Portrait Folder")
 #L3Port.grid(row=2, column=0,pady=5, padx=20)
 
-
 L3Land = Label(window, text="Landscape Folder")
 #L3Land.grid(row=3, column=0,pady=5, padx=20)
 
 L4 = Label(window, text="Background color")
 L4.grid(row=5, column=0,pady=5, padx=20)
+
+L5 = Label(window, text="Decrase Percentage")
+L5.grid(row=6, column=0,pady=5, padx=20)
 
 timeSleep = tkinter.Entry(window)
 timeSleep.insert(0, "5")
@@ -740,8 +781,8 @@ timeSleep.grid(row=0, column=1)
 
 
 footerPath = tkinter.Entry(window,width=50)
-footerPath.insert(0, "/home/pi/Desktop/diashow//ragaziana_s.jpg")
-#footerPath.insert(0, "C:/Users/DotNet/Desktop/diashow/ragaziana_s.jpg")
+#footerPath.insert(0, "/home/pi/Desktop/diashow//ragaziana_s.jpg")
+footerPath.insert(0, "C:/Users/DotNet/Desktop/diashow/ragaziana_s.jpg")
 footerPath.grid(row=1, column=1)
 
 allDirEntry = tkinter.Entry(window,width=50)
@@ -749,19 +790,24 @@ allDirEntry.insert(0, "")
 allDirEntry.grid(row=2, column=1)
 
 portDirEntry = tkinter.Entry(window,width=50)
-portDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Portrait")
-#portDirEntry.insert(0, "C:/Users/DotNet/Desktop/diashow/4 Random/Portrait")
+#portDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Portrait")
+portDirEntry.insert(0, "C:/Users/DotNet/Desktop/diashow/4 Random/Portrait")
 #portDirEntry.grid(row=2, column=1)
 
 landDirEntry = tkinter.Entry(window,width=50)
-landDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Landschaft")
-#landDirEntry.insert(0, "C:/Users/DotNet/Desktop/diashow/4 Random/Landschaft")
+#landDirEntry.insert(0, "/home/pi/Desktop/diashow/4 Random/Landschaft")
+landDirEntry.insert(0, "C:/Users/DotNet/Desktop/diashow/4 Random/Landschaft")
 
 #landDirEntry.grid(row=3, column=1)
 
 colorEntry = tkinter.Entry(window, width=50)
 colorEntry.insert(0, "#ffffff")
 colorEntry.grid(row=5, column=1)
+
+#Decrase the view by percentage
+percentageEntry = tkinter.Entry(window, width=50)
+percentageEntry.insert(0, "10")
+percentageEntry.grid(row=6, column=1)
 
 select_btn = Button(window,text="Select file",width=10,command=insert)
 select_btn.grid(row=1, column=2,pady=5, padx=20)
@@ -778,13 +824,13 @@ land_btn = Button(window,text="Select Folder",width=10,command=insertLandDir)
 
 
 folderMode = tkinter.Button(text="2 Folders Mode", width=12, relief="raised", command=toggle)
-folderMode.grid(row=6, column=0)
+folderMode.grid(row=7, column=0)
 
 colorButton = Button(window, text = "Select color",command = choose_color, width=10)
 colorButton.grid(row=5, column=2,pady=5, padx=20)
 
 radioGroup = LabelFrame(window, text = "Select view type")
-radioGroup.grid(row=6, column=1)
+radioGroup.grid(row=7, column=1)
 
 #Varibale to use in choices
 Radio_Value0 = tkinter.IntVar ()
@@ -793,15 +839,15 @@ Radio_Value0.set(0)
 # =============================================================================
 # choice1 = ttk.Radiobutton(radioGroup, text="Single View", variable = Radio_Value0, value = not yet)
 # choice1.configure(state = DISABLED)
-# choice1.grid(row=6, column=0)
+# choice1.grid(row=7, column=0)
 # choice2 = ttk.Radiobutton(radioGroup, text="Multi View", variable = Radio_Value0, value = not yet)
 # choice2.configure(state = DISABLED)
-# choice2.grid(row=6, column=1)
+# choice2.grid(row=7, column=1)
 # =============================================================================
 choice3 = ttk.Radiobutton(radioGroup, text="Standard", variable = Radio_Value0, value = 0)
-choice3.grid(row=6, column=2)
+choice3.grid(row=7, column=2)
 choice3 = ttk.Radiobutton(radioGroup, text="Rotate", variable = Radio_Value0, value = 1)
-choice3.grid(row=6, column=3)
+choice3.grid(row=7, column=3)
 
 
 #chk = ttk.Checkbutton(window, text="Start Slideshow on Reboot", command=checkBoxReboot)
@@ -812,7 +858,7 @@ choice3.grid(row=6, column=3)
 
 button3=Button(window,text="Play",width=10,command=checkPlay, bg='#d5eaff')
 #button3.place(relx=0.7, rely=0.5, anchor=CENTER)
-button3.grid(row=6, column=2,pady=20, padx=20)
+button3.grid(row=7, column=2,pady=20, padx=20)
 #Full Screen keys
 window.bind('<Escape>', close)
 window.bind('<Double 1>', fullScreen)
