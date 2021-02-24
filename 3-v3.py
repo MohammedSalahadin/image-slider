@@ -540,15 +540,17 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand,resi
         imgLand = get_img_fit_size(pathLand, can_w_l, can_h_l, True, direction)
         landImgCanvas = canvasLand.create_image(0,0,anchor=NW, image=imgLand)
         
-        print("###########################################################")
-        print('can_w_l:',can_w_l,' can_h_l:',can_h_l)
-        print('Img_width:', imgLand.width(), 'img_height:',imgLand.height())
-        print("###########################################################")
+# =============================================================================
+#         print("###########################################################")
+#         print('can_w_l:',can_w_l,' can_h_l:',can_h_l)
+#         print('Img_width:', imgLand.width(), 'img_height:',imgLand.height())
+#         print("###########################################################")
+# =============================================================================
         
         canvasLand.move(landImgCanvas, 0, -200)
         window.update()
         count2, x2, y2 = 0, 0 ,0
-        while count2 < 96:
+        while count2 < 95:
             y2 += 0.05
             canvasLand.move(landImgCanvas, x2, y2)
             time.sleep(0.01)
