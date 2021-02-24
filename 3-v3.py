@@ -533,8 +533,7 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand,resi
         can_w_l = per_w_imgs_landscape
         can_h_l = scr_h_decreased
         
-        
-       
+
         canvasLand = Canvas(window,width=can_w_l, height=can_h_l, bg=bgcolor, highlightthickness=0, highlightbackground=bgcolor)
         canvasLand.grid(row=0, column=1)
         imgLand = get_img_fit_size(pathLand, can_w_l, can_h_l, True, direction)
