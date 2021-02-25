@@ -442,11 +442,31 @@ def decrease(percentage, original):
 def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand,resize_persent):
     
     
-    #print(decrease(resize_persent,scr_h_decreased))
     
+    
+    relocateY= ((resize_persent/100)*scr_h)/2
+    relocateX = ((resize_persent/100)*scr_w)/2
+    
+    # Footer location
+    fX=((92/100)*scr_w)-(relocateX*2)
+    fY=0 + relocateY
+    
+    # Landscape Location
+    lX= ((50/100)*scr_w)-relocateX
+    lY = 0 + relocateY
+    
+    # portrait Location
+    pX = 0 + relocateX
+    pY = 0 + relocateY
+    
+    print("scr_w:",scr_w,"scr_h:","relocateX",relocateX,"relocateY",relocateY,"fX:",fX, "fY:",fY,"lX:", lX,"lY:", lY,"pX:", pX,"pY:", pY)
+    
+    #New value for the screen after resizing using decrase function
+    #print(decrease(resize_persent,scr_h_decreased)) 
     scr_w_decreased = decrease(resize_persent,scr_w)
     scr_h_decreased = decrease(resize_persent,scr_h)
     
+    print(scr_w, scr_h)
     print("90 View")
         #Creating tk window
     window.attributes('-fullscreen', True)
@@ -466,8 +486,9 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand,resi
     per_w_footer = cal_per_num(final_persent(8,resize_persent), scr_w_decreased)
     # Footer Image operations
     canvasFoot = Canvas(window,width=per_w_footer, height=scr_h_decreased, bg=bgcolor, highlightthickness=0, highlightbackground=bgcolor)
-    canvasFoot.grid(row=0, column=2)
-
+    #canvasFoot.grid(row=0, column=2)
+    #canvasFoot.pack(side="right",fill="both", expand=True)
+    canvasFoot.place(x=fX, y=fY)
     
     #footerImg = get_img_fit_size(footerPath, scr_h_decreased, per_w_footer, True)
     footerImg1 = Image.open(footerPath)
@@ -497,8 +518,9 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand,resi
         canvasPort = Canvas(window,width=can_w_l, height=can_h_l, bg=bgcolor, highlightthickness=0, highlightbackground=bgcolor)
         
         # Gird plays the canvas without it the canvas will not work
-        canvasPort.grid(row=0, column=0)
-        
+        #canvasPort.grid(row=0, column=0)
+        #canvasPort.pack(side="left",fill="both", expand=True)
+        canvasPort.place(x=pX, y=pY)
         
 
         # Because the image will be rotated then resized in get_img_fit_size method and user these valus
@@ -535,9 +557,12 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand,resi
         
 
         canvasLand = Canvas(window,width=can_w_l, height=can_h_l, bg=bgcolor, highlightthickness=0, highlightbackground=bgcolor)
-        canvasLand.grid(row=0, column=1)
+        #canvasLand.grid(row=0, column=1)
+        #canvasLand.pack(side="left",fill="both", expand=True)
+        canvasLand.place(x=lX, y=lY)
+        
         imgLand = get_img_fit_size(pathLand, can_w_l, can_h_l, True, direction)
-        landImgCanvas = canvasLand.create_image(0,0,anchor=NW, image=imgLand)
+        landImgCanvas = canvasLand.create_image((can_w_l/2),(can_h_l/2),anchor=CENTER, image=imgLand)
         
 # =============================================================================
 #         print("###########################################################")
@@ -549,7 +574,7 @@ def Multi_view_rotate_90(timeSleepVal,footerPath,bgcolor,pathsPrt,pathsLand,resi
         canvasLand.move(landImgCanvas, 0, -200)
         window.update()
         count2, x2, y2 = 0, 0 ,0
-        while count2 < 95:
+        while count2 < 90:
             y2 += 0.05
             canvasLand.move(landImgCanvas, x2, y2)
             time.sleep(0.01)
@@ -593,13 +618,11 @@ def startOnReboot():
     else:
         print("The CheckBox is Not Selected")
         createFile()
-        insertValue("False")
-    
+        insertValue("False") 
 def close(event):
     window.destroy()
 def hide_me(event):
     event.widget.grid_forget()    
-
 #function to insert the footer file neme to the text input
 def insert():
     file = filedialog.askopenfilename()
@@ -620,9 +643,7 @@ def insertLandDir():
     file = filedialog.askdirectory()
     global landDirEntry
     landDirEntry.delete(0, 'end')
-    landDirEntry.insert(0, file)
-    
-     
+    landDirEntry.insert(0, file)    
 def choose_color():
     global colorEntry
     # variable to store hexadecimal code of color
@@ -632,7 +653,6 @@ def choose_color():
     colorEntry.delete(0, 'end')
     colorEntry.insert(0, color_code[1])
     colorEntry.config({"background": colorEntry.get()})
-    
 def toggle():
     globals()
     
@@ -673,10 +693,7 @@ def toggle():
         
         folderMode.config(relief="sunken")
         folderMode.configure(bg='#65fe5c')
-        
-        
-        
-
+   
 # Check all inputs before procceding to the main functoin
 
 def checkPlay(mode="none"):
@@ -734,6 +751,8 @@ def checkPlay(mode="none"):
         all_btn.destroy()
         colorButton.destroy()
         radioGroup.destroy()
+        choice3.destroy()
+        choice4.destroy()
         button3.destroy()
         
         #Single_view(timeSleepVal,allDirEntryVal,bgcolorVal)
@@ -775,8 +794,8 @@ L5 = Label(window, text="Decrase Percentage")
 L5.grid(row=6, column=0,pady=5, padx=20)
 
 timeSleep = tkinter.Entry(window)
-#timeSleep.insert(0, "5")
-timeSleep.insert(0, "1")
+timeSleep.insert(0, "5")
+#timeSleep.insert(0, "1")
 timeSleep.grid(row=0, column=1)
 
 
@@ -848,8 +867,8 @@ Radio_Value0.set(0)
 # =============================================================================
 choice3 = ttk.Radiobutton(radioGroup, text="Standard", variable = Radio_Value0, value = 0)
 choice3.grid(row=7, column=2)
-choice3 = ttk.Radiobutton(radioGroup, text="Rotate", variable = Radio_Value0, value = 1)
-choice3.grid(row=7, column=3)
+choice4 = ttk.Radiobutton(radioGroup, text="Rotate", variable = Radio_Value0, value = 1)
+choice4.grid(row=7, column=3)
 
 
 #chk = ttk.Checkbutton(window, text="Start Slideshow on Reboot", command=checkBoxReboot)
